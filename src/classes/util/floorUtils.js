@@ -6,19 +6,29 @@ export const floorBuilder = size => {
 	let floor = [];
 	// let top = []
 	// debugger;
-	let top = _.fill(Array(size - 2), roomBuilder("northWall"));
+	let top = [];
+	_.times(size - 2, () => {
+		top.push(roomBuilder("northWall"));
+	});
+	// let top = _.fill(Array(size - 2));
 	top.push(roomBuilder("cornerNE"));
 	top.unshift(roomBuilder("cornerNW"));
 	floor.push(top);
 
 	times(size - 2, () => {
-		let row = _.fill(Array(size - 2), roomBuilder("openRoom"));
+		let row = [];
+		_.times(size - 2, () => {
+			row.push(roomBuilder("openROom"));
+		});
 		row.push(roomBuilder("eastWall"));
 		row.unshift(roomBuilder("westWall"));
 		floor.push(row);
 	});
 
-	let bottom = _.fill(Array(size - 2), roomBuilder("southWall"));
+	let bottom = [];
+	_.times(size - 2, () => {
+		bottom.push(roomBuilder("northWall"));
+	});
 	bottom.push(roomBuilder("cornerSE"));
 	bottom.unshift(roomBuilder("cornerSW"));
 
@@ -55,7 +65,6 @@ export const floorBuilder = size => {
 		room.north = above;
 		above.south = room;
 	}
-	debugger;
 	return floor;
 };
 //TODO Write function to send info from room class
