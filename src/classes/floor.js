@@ -35,51 +35,56 @@ export default class Floor {
 				y: 0
 			}
 		};
+		let done = true;
+		while (done) {
+			done = true;
+			this.genEndpoints();
+			this.setEndpoints();
+			const conNodes = connectNodes;
+			let found = true;
+			if (i > 150) {
+				done = false;
+			}
+			let i = 0;
 
-		this.genEndpoints();
-		this.setEndpoints();
-		const conNodes = connectNodes;
-		let found = true;
-		let i = 0;
-
-		while (found || found !== "blocked") {
+			while (found || found !== "blocked") {
+				found = true;
+				this.rooms.forEach(row => {
+					row.forEach(room => {
+						found = conNodes(this.rooms, room, this.startRoom);
+						i++;
+					});
+				});
+				this.rooms.forEach(row => {
+					row.forEach(room => {
+						if (
+							room.type !== "start" ||
+							room.type !== "boss" ||
+							room.type !== "built"
+						)
+							found = false;
+					});
+				});
+				if (i > 500000) {
+					break;
+				} else {
+					found = false;
+				}
+			}
 			this.rooms.forEach(row => {
 				row.forEach(room => {
-					found = conNodes(this.rooms, room, this.startRoom);
-					i++;
-					console.log(i);
+					if (
+						room.type !== "start" ||
+						room.type !== "boss" ||
+						room.type !== "built"
+					)
+						done = false;
 				});
 			});
-			if (i > 36) {
-				break;
-			}
 		}
-
-		this.rooms.forEach(row => {
-			row.forEach(room => {
-				console.log(room.type);
-				// room.type = "blocked";
-			});
-		});
-
-		// while (found) {}
-
-		// found = conNodes(this.rooms, this.bossRoom, this.startRoom);
-		// while (!found) {
-		// 	found = conNodes(this.rooms, this.bossRoom, this.startRoom);
-		// }
-		// debugger;
-		// while (found) {
-		// 	debugger;
-
-		// 	found = conNodes(this.rooms, this.startRoom, this.bossRoom);
-		// }
-		// debugger;
 		console.log(this.rooms);
-		// let startNode = this.fillNodes(start);
-
-		// console.log(this.bossRoom);
-		// console.log(this.startRoom);
+		console.log(this.startRoom.cords);
+		console.log(this.bossRoom.cords);
 	}
 
 	//* Generates a start room and an end room in opposite quadrents
