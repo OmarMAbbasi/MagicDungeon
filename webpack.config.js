@@ -1,5 +1,5 @@
 const path = require("path");
-const webpack = require("webpack");
+// const webpack = require("webpack");
 
 module.exports = {
 	entry: "./src/index.js",
@@ -43,7 +43,6 @@ module.exports = {
 			}
 		]
 	},
-	devtool: "inline-source-map",
 	resolve: {
 		extensions: [".js", ".jsx", "*"]
 	}

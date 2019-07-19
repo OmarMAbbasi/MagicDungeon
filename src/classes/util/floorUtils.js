@@ -152,5 +152,3 @@ export const roomBuilder = (layout, type) => {
 	}
 	return new Room(base, layout, type);
 };
-
-

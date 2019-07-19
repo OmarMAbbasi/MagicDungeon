@@ -1,10 +1,10 @@
 import { roomBuilder, floorBuilder } from "./util/floorUtils";
 import random from "lodash";
+import { connectNodes } from "./util/nodeUtils";
 
 export default class Floor {
 	constructor(size) {
 		//*Default = 6 x 6
-		debugger;
 		//!rooms=[x,y]
 		this.rooms = floorBuilder(size);
 
@@ -15,22 +15,23 @@ export default class Floor {
 
 		//! will be assigned X: and Y: cords
 		this.bossRoom = {
-			type: "boss"
+			type: "boss",
+			found: false
 		};
 
 		this.genEndpoints();
 		this.setEndpoints();
-		
-		let startNode =
-		this.fillNodes(start);
+
+		const conNodes = connectNodes;
+		// let startNode = this.fillNodes(start);
+		debugger;
+
+		connectNodes(rooms, this.startRoom, this.bossRoom);
 		console.log(this.rooms);
 
 		console.log(this.bossRoom);
 		console.log(this.startRoom);
 	}
-
-	scaffoldRooms(rooms, this.startNode, this.bossNode)
-	
 
 	//* Generates a start room and an end room in opposite quadrents
 	genEndpoints() {
@@ -110,12 +111,12 @@ export default class Floor {
 	setEndpoints() {
 		let x = this.startRoom.x;
 		let y = this.startRoom.y;
-		this.startRoom.cords = { x, y };
+		this.startRoom.cords = { x: x, y: y };
 		this.rooms[x][y] = roomBuilder("open", "start");
-		this.startRoom.node = {}
+		this.startRoom.node = {};
 		x = this.bossRoom.x;
 		y = this.bossRoom.y;
-		this.bossRoom.cords = { x, y };
+		this.bossRoom.cords = { x: x, y: y };
 		this.rooms[x][y] = roomBuilder(this.bossRoom.layout, "boss");
 	}
 }
