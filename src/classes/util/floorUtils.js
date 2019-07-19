@@ -18,11 +18,44 @@ export const floorBuilder = size => {
 		floor.push(row);
 	});
 
-	let bottom = _.fill(Array(size - 2), roomBuilder("bottomWall"));
+	let bottom = _.fill(Array(size - 2), roomBuilder("southWall"));
 	bottom.push(roomBuilder("cornerSE"));
 	bottom.unshift(roomBuilder("cornerSW"));
 
 	floor.push(bottom);
+
+	let room = floor[0][5];
+	let next = floor[1][5];
+
+	//! Connect first row
+	for (let y = 0; y < floor.length - 1; y++) {
+		room = floor[0][y];
+		next = floor[0][y + 1];
+
+		room.east = next;
+		next.west = room;
+	}
+
+	let above;
+	//! Connect middle rows
+	for (let x = 1; x < floor.length; x++) {
+		for (let y = 0; y < floor.length - 1; y++) {
+			room = floor[x][y];
+
+			above = floor[x - 1][y];
+			room.north = above;
+			above.south = room;
+
+			next = floor[x][y + 1];
+			room.east = next;
+			next.west = room;
+		}
+		room = floor[x][5];
+		above = floor[x - 1][5];
+		room.north = above;
+		above.south = room;
+	}
+	debugger;
 	return floor;
 };
 //TODO Write function to send info from room class
@@ -36,7 +69,7 @@ export const roomBuilder = (layout, type) => {
 	};
 	type = type || "unbuilt";
 	switch (layout) {
-		case "cornerNE":
+		case "cornerNW":
 			base = {
 				north: "wall",
 				south: "open",
@@ -44,7 +77,7 @@ export const roomBuilder = (layout, type) => {
 				west: "wall"
 			};
 			break;
-		case "cornerNW":
+		case "cornerNE":
 			base = {
 				north: "wall",
 				south: "open",
@@ -52,18 +85,18 @@ export const roomBuilder = (layout, type) => {
 				west: "open"
 			};
 			break;
-		case "cornerSE":
+		case "cornerSW":
 			base = {
-				north: "wall",
-				south: "open",
+				north: "open",
+				south: "wall",
 				east: "open",
 				west: "wall"
 			};
 			break;
-		case "cornerSW":
+		case "cornerSE":
 			base = {
-				north: "wall",
-				south: "open",
+				north: "open",
+				south: "wall",
 				east: "wall",
 				west: "open"
 			};
@@ -75,9 +108,10 @@ export const roomBuilder = (layout, type) => {
 				east: "open",
 				west: "open"
 			};
+
 		case "southWall":
 			base = {
-				north: "open",
+				north: "wall",
 				south: "wall",
 				east: "open",
 				west: "open"

@@ -6,7 +6,10 @@ export default class Floor {
 	constructor(size) {
 		//*Default = 6 x 6
 		//!rooms=[x,y]
-		this.rooms = floorBuilder(size);
+		debugger;
+		const fBuilder = floorBuilder;
+
+		this.rooms = fBuilder(size);
 
 		//! will be assigned X: and Y: cords
 		this.startRoom = {
@@ -22,11 +25,10 @@ export default class Floor {
 		this.genEndpoints();
 		this.setEndpoints();
 
-		const conNodes = connectNodes;
+		// const conNodes = connectNodes;
 		// let startNode = this.fillNodes(start);
-		debugger;
 
-		connectNodes(rooms, this.startRoom, this.bossRoom);
+		// connectNodes(rooms, this.startRoom, this.bossRoom);
 		console.log(this.rooms);
 
 		console.log(this.bossRoom);
