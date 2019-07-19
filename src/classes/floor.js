@@ -9,6 +9,7 @@ export default class Floor {
 
 		this.rBuilder = roomBuilder;
 		const fBuilder = floorBuilder;
+		const nodes = connectNodes;
 
 		this.rooms = fBuilder(size);
 
@@ -23,6 +24,7 @@ export default class Floor {
 				y: 0
 			}
 		};
+		debugger;
 
 		//! will be assigned X: and Y: cords
 		this.bossRoom = {
@@ -37,11 +39,10 @@ export default class Floor {
 
 		this.genEndpoints();
 		this.setEndpoints();
-
-		// const conNodes = connectNodes;
+		const conNodes = connectNodes;
+		conNodes(this.rooms, this.bossRoom);
 		// let startNode = this.fillNodes(start);
 
-		// connectNodes(rooms, this.startRoom, this.bossRoom);
 		console.log(this.rooms);
 		console.log(this.bossRoom);
 		console.log(this.startRoom);
@@ -127,7 +128,7 @@ export default class Floor {
 		let y = this.startRoom.cords.y;
 
 		let start = this.rooms[x][y];
-		this.startRoom = _.~merge(start, this.startRoom);
+		this.startRoom = _.merge(start, this.startRoom);
 		this.rooms[x][y] = this.startRoom;
 		// Object.assign(roomBuilder("open", "start"));
 

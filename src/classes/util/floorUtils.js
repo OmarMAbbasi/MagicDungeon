@@ -2,6 +2,8 @@ import fill from "lodash/fill";
 import times from "lodash/times";
 import Room from "../rooms/room";
 //builds out 2D array of room nodes based on size
+
+//TODO Modularize floorBuilder
 export const floorBuilder = size => {
 	let floor = [];
 	// let top = []
@@ -18,7 +20,7 @@ export const floorBuilder = size => {
 	times(size - 2, () => {
 		let row = [];
 		_.times(size - 2, () => {
-			row.push(roomBuilder("openRoom"));
+			row.push(roomBuilder("openRom"));
 		});
 		row.push(roomBuilder("eastWall"));
 		row.unshift(roomBuilder("westWall"));
@@ -34,10 +36,10 @@ export const floorBuilder = size => {
 
 	floor.push(bottom);
 
+	//! Connect first row
 	let room = floor[0][5];
 	let next = floor[1][5];
 
-	//! Connect first row
 	for (let y = 0; y < floor.length - 1; y++) {
 		room = floor[0][y];
 		next = floor[0][y + 1];
@@ -46,8 +48,8 @@ export const floorBuilder = size => {
 		next.west = room;
 	}
 
-	let above;
 	//! Connect middle rows
+	let above;
 	for (let x = 1; x < floor.length; x++) {
 		for (let y = 0; y < floor.length - 1; y++) {
 			room = floor[x][y];
@@ -65,6 +67,14 @@ export const floorBuilder = size => {
 		room.north = above;
 		above.south = room;
 	}
+
+	//! Assign cords to room nodes
+	for (let x = 0; x < floor.length; x++) {
+		for (let y = 0; y < floor.length; y++) {
+			floor[x][y].cords = { x: x, y: y };
+		}
+	}
+
 	return floor;
 };
 //TODO Write function to send info from room class

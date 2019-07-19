@@ -1,130 +1,251 @@
 import { roomBuilder } from "./floorUtils";
-import sample from "lodash";
+import { sample, merge } from "lodash";
 
-export const connectBossToStart = (rooms, curr) => {
+const rBuilder = roomBuilder;
+
+export const connectNodes = (rooms, curr) => {
 	//! first curr == boss
-	let x = curr.cords.x;
-	let y = curr.cords.y;
+	// let x = curr.cords.x;
+	// let y = curr.cords.y;
 
 	let buildQueue = [curr];
+	let visited = [];
+	let found = false;
 	// let currRoom = rooms[x][y];
-
+	//TODO UPDATE BUILD POOLS
 	while (buildQueue.length > 0) {
 		let currRoom = buildQueue.shift();
+		visited.push(currRoom);
+		let nextRoom;
 		if (currRoom.type === "start") {
-			return true;
-		} else {
-			if (currRoom.north !== "wall") {
-				nextRoom = rooms[x][y - 1];
-				if (nextRoom.type !== "unbuilt") {
-					rooms[x][y - 1] = nextRoom;
-					rebuilt = buildNorth(rooms, currRoom);
-					currRoom.north = nextRoom;
-					nextRoom.south = currRoom;
-				}
-			} else if (currRoom.north !== "wall") {
-				nextRoom = rooms[x][y - 1];
-				if (nextRoom.type !== "unbuilt") {
-					rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
-					currRoom.north = nextRoom;
-					nextRoom.south = currRoom;
-				}
-			} else if (currRoom.north !== "wall") {
-				nextRoom = rooms[x][y - 1];
-				if (nextRoom.type !== "unbuilt") {
-					rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
-					currRoom.north = nextRoom;
-					nextRoom.south = currRoom;
-				}
+			// return true;
+			found = true;
+		}
+		if (currRoom.north && currRoom.north !== "wall") {
+			nextRoom = currRoom.north;
+			if (
+				(nextRoom.type === "unbuilt") &
+				(nextRoom.type !== "start" || nextRoom.type !== "boss")
+			) {
+				let rebuilt = buildNorth(nextRoom);
+				nextRoom = _.merge(nextRoom, rebuilt);
+				// debugger;
+				buildQueue.unshift(nextRoom);
+			}
+		} else if (currRoom.south && currRoom.south !== "wall") {
+			nextRoom = currRoom.south;
+			if (
+				(nextRoom.type === "unbuilt") &
+				(nextRoom.type !== "start" || nextRoom.type !== "boss")
+			) {
+				let rebuilt = buildSouth(nextRoom);
+				nextRoom = _.merge(nextRoom, rebuilt);
+				// debugger;
+				buildQueue.unshift(nextRoom);
+			}
+		} else if (currRoom.east && currRoom.east !== "wall") {
+			nextRoom = currRoom.east;
+			if (
+				(nextRoom.type === "unbuilt") &
+				(nextRoom.type !== "start" || nextRoom.type !== "boss")
+			) {
+				let rebuilt = buildEast(nextRoom);
+				nextRoom = _.merge(nextRoom, rebuilt);
+				// debugger;
+				buildQueue.unshift(nextRoom);
+			}
+		} else if (currRoom.west && currRoom.west !== "wall") {
+			nextRoom = currRoom.west;
+			if (
+				(nextRoom.type === "unbuilt") &
+				(nextRoom.type !== "start" || nextRoom.type !== "boss")
+			) {
+				let rebuilt = buildWest(nextRoom);
+				nextRoom = _.merge(nextRoom, rebuilt);
+				// debugger;
+				buildQueue.unshift(nextRoom);
 			}
 		}
+		debugger;
 	}
-	return false;
+	return found;
+	// return false;
 };
 
 // const nodeGenerator = (rooms, curr) => {};
 
 const sampleSet = set => {
 	let layout = _.sample(set);
-	return roomBuilder(layout, "built");
+	return rBuilder(layout, "built");
 };
 
-const buildNorth = prev => {
-	let x = prev.cords.x;
-	let y = prev.cords.y - 1;
-	let type = "open";
-	let newRoom;
+const buildNorth = room => {
+	let x = room.cords.x;
+	let y = room.cords.y;
+	let builtRoom;
 	switch (x) {
-		//!North
+		//!SOUTH > NORTH
 		case 0:
 			//!West
 			switch (y) {
 				case 0:
-					//! NW_Wall
-					newRoom = sampleSet(NORTH_TO_NW);
+					//! NW_CORNER
+					builtRoom = sampleSet(NORTH.NORTH_TO_NW);
 					break;
 				case 5:
-					//! NE_Wall
-					newRoom = sampleSet(NORTH_TO_NE);
+					//! SW_CORNER
+					builtRoom = sampleSet(NORTH.NORTH_TO_NE);
 					break;
 				default:
 					//! North Wall
-					newRoom = sampleSet(NORTH_WALL);
+					builtRoom = sampleSet(NORTH.NORTH_WALL);
 					break;
 			}
 			break;
-		// case 5:
-		// 	//!West
-		// 	switch (y) {
-		// 		case 0:
-		// 			newRoom = sampleSet(NORTH_WALL);
-		// 			//! SW_Wall
-		// 			break;
-		// 		case 5:
-		// 			//! SE_Wall
-		// 			break;
-		// 		default:
-		// 			//! South Wall
-		// 			break;
-		// 	}
-		// 	break;
 		default:
 			switch (y) {
 				case 0:
 					//!WestWall
-					newRoom = sampleSet(NORTH_ALONG_WEST);
+					builtRoom = sampleSet(NORTH.NORTH_ALONG_WEST);
 					break;
 				case 5:
 					//!EastWall
-					newRoom = sampleSet(NORTH_ALONG_EAST);
+					builtRoom = sampleSet(NORTH.NORTH_ALONG_EAST);
 
 				default:
 					//!Pure
-					newRoom = sampleSet(PURE_NORTH);
+					builtRoom = sampleSet(NORTH.PURE_NORTH);
 					break;
 			}
 			break;
 	}
+	return builtRoom;
 };
+//* WORKING
 
 export const buildSouth = room => {
-	walls = {
-		north: room
-	};
+	let x = room.cords.x;
+	let y = room.cords.y;
+	let builtRoom;
+	if (x === 5) {
+		//!NORTH > SOUTH
+		switch (y) {
+			case 0:
+				//! SW_CORNER
+				builtRoom = sampleSet(SOUTH.SOUTH_TO_SW);
+				break;
+			case 5:
+				//! SE_CORNER
+				builtRoom = sampleSet(SOUTH.SOUTH_TO_SE);
+				break;
+			default:
+				//! South Wall
+				builtRoom = sampleSet(SOUTH.SOUTH_WALL);
+				break;
+		}
+	} else {
+		switch (y) {
+			case 0:
+				//!WestWall
+				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_WEST);
+				break;
+			case 5:
+				//!EastWall
+				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_EAST);
+
+			default:
+				//!Pure
+				builtRoom = sampleSet(SOUTH.PURE_SOUTH);
+				break;
+		}
+	}
+	return builtRoom;
 };
+
 export const buildEast = room => {
-	walls = {
-		west: room
-	};
+	let x = room.cords.x;
+	let y = room.cords.y;
+	let builtRoom;
+
+	//!WEST>EAST
+	if (y === 5) {
+		switch (x) {
+			case 0:
+				//! NE_CORNER
+				builtRoom = sampleSet(WEST.WEST_TO_NW);
+				break;
+			case 5:
+				//! NW_CORNER
+				builtRoom = sampleSet(WEST.WEST_TO_NE);
+				break;
+			default:
+				//! West Wall
+				builtRoom = sampleSet(WEST.WEST_WALL);
+				break;
+		}
+	} else {
+		switch (x) {
+			case 0:
+				//!South Wall
+				builtRoom = sampleSet(WEST.WEST_ALONG_NORTH);
+				break;
+			case 5:
+				//!East Wall
+				builtRoom = sampleSet(WEST.WEST_ALONG_SOUTH);
+
+			default:
+				//!Pure
+				builtRoom = sampleSet(WEST.PURE_WEST);
+				break;
+		}
+	}
+	return builtRoom;
 };
+
 export const buildWest = room => {
-	walls = {
-		east: room
-	};
+	let x = room.cords.x;
+	let y = room.cords.y;
+
+	let builtRoom;
+
+	//!EAST > WEST
+	if (y === 0) {
+		switch (x) {
+			case 0:
+				//! SW_CORNER
+				builtRoom = sampleSet(EAST.EAST_TO_SW);
+				break;
+			case 5:
+				//! SE_CORNER
+				builtRoom = sampleSet(EAST.EAST_TO_SE);
+				break;
+			default:
+				//! EAST Wall
+				builtRoom = sampleSet(EAST.EAST_WALL);
+				break;
+		}
+	} else {
+		switch (x) {
+			case 0:
+				//!North Wall
+				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_WEST);
+				break;
+			case 5:
+				//!South Wall
+				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_EAST);
+
+			default:
+				//!Pure
+				builtRoom = sampleSet(SOUTH.PURE_SOUTH);
+				break;
+		}
+	}
+	return builtRoom;
 };
 
 //! ROOM POOLS: Separated by build direction.
-const NORTH = {
+//TODO get pools to export to another file.
+export const NORTH = {
 	NORTH_TO_NW: ["northDeadend", "cornerNW"],
 	NORTH_TO_NE: ["northDeadend", "cornerNE"],
 	NORTH_WALL: ["northDeadend", "cornerNE", "cornerNW", "northWall"],
@@ -156,7 +277,7 @@ const NORTH = {
 };
 
 //!!BUILD SOUTH v
-const SOUTH = {
+export const SOUTH = {
 	SOUTH_TO_SW: ["southDeadend", "cornerSW"],
 	SOUTH_TO_SE: ["southDeadend", "cornerSE"],
 	SOUTH_WALL: ["southDeadend", "cornerSE", "cornerSW", "southWall"],
@@ -186,7 +307,7 @@ const SOUTH = {
 	]
 };
 //!Build East >
-const EAST = {
+export const EAST = {
 	EAST_TO_SE: ["eastDeadend", "cornerSW"],
 	EAST_TO_SW: ["eastDeadend", "cornerNW"],
 	EAST_WALL: ["eastDeadend", "cornerSE", "cornerSW", " eastWall "],
@@ -216,7 +337,7 @@ const EAST = {
 	]
 };
 //! Build West <
-const WEST = {
+export const WEST = {
 	WEST_TO_SE: ["westDeadend", "cornerSW"],
 	WEST_TO_SW: ["westDeadend", "cornerNW"],
 	WEST_WALL: ["westDeadend", "cornerSE", "cornerSW", "westWall "],
@@ -246,7 +367,7 @@ const WEST = {
 	]
 };
 
-const SCALE = {
+export const SCALE = {
 	MIN_WALLS: ["northWall", "eastWall", "southWall", "westWall", "open"],
 	CLOSE_GAPS: ["northDeadend", "southDeadend", "eastDeadend", "westDeadend"]
 };
