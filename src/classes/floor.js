@@ -1,11 +1,13 @@
 import { roomBuilder, floorBuilder } from "./util/floorUtils";
-import random from "lodash";
+import { random, sample, merge } from "lodash";
 import { connectNodes } from "./util/nodeUtils";
 
 export default class Floor {
 	constructor(size) {
 		//*Default = 6 x 6
 		//!rooms=[x,y]
+
+		this.rBuilder = roomBuilder;
 		const fBuilder = floorBuilder;
 
 		this.rooms = fBuilder(size);
@@ -63,28 +65,30 @@ export default class Floor {
 		let layouts;
 		switch (quad) {
 			case 1:
-				layouts = ["northDeadend", "westDeadend"];
-				this.bossRoom.layout = layouts[_.random(0, 1)];
+				layouts = _.sample(["northDeadend", "westDeadend"]);
+				// this.bossRoom.layout = layouts[_.random(0, 1)];
 				break;
 
 			case 2:
-				layouts = ["northDeadend", "eastDeadend"];
-				this.bossRoom.layout = layouts[_.random(0, 1)];
+				layouts = _.sample(["northDeadend", "eastDeadend"]);
+				// this.bossRoom.layout = layouts[_.random(0, 1)];
 				break;
 
 			case 3:
-				layouts = ["southDeadend", "westDeadend"];
-				this.bossRoom.layout = layouts[_.random(0, 1)];
+				layouts = _.sample(["southDeadend", "westDeadend"]);
+				// this.bossRoom.layout = layouts[_.random(0, 1)];
 				break;
 
 			case 4:
-				layouts = ["southDeadend", "eastDeadend"];
-				this.bossRoom.layout = layouts[_.random(0, 1)];
+				layouts = _.sample(["southDeadend", "eastDeadend"]);
+				// this.bossRoom.layout = layouts[_.random(0, 1)];
 				break;
 
 			default:
 				break;
 		}
+		let layout = this.rBuilder(layouts, "boss");
+		this.bossRoom = _.merge(layout, this.bossRoom);
 	}
 
 	//! Quadrents   1  2
@@ -123,15 +127,15 @@ export default class Floor {
 		let y = this.startRoom.cords.y;
 
 		let start = this.rooms[x][y];
-		this.startRoom = Object.assign(start, this.startRoom);
+		this.startRoom = _.~merge(start, this.startRoom);
 		this.rooms[x][y] = this.startRoom;
-		Object.assign(roomBuilder("open", "start"));
+		// Object.assign(roomBuilder("open", "start"));
 
 		x = this.bossRoom.cords.x;
 		y = this.bossRoom.cords.y;
 
 		let boss = this.rooms[x][y];
-		this.bossRoom = Object.assign(boss, this.bossRoom);
+		this.bossRoom = _.merge(boss, this.bossRoom);
 		this.rooms[x][y] = this.bossRoom;
 
 		this.rooms.forEach(row => {

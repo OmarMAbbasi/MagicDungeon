@@ -18,7 +18,7 @@ export const floorBuilder = size => {
 	times(size - 2, () => {
 		let row = [];
 		_.times(size - 2, () => {
-			row.push(roomBuilder("openROom"));
+			row.push(roomBuilder("openRoom"));
 		});
 		row.push(roomBuilder("eastWall"));
 		row.unshift(roomBuilder("westWall"));
@@ -70,82 +70,55 @@ export const floorBuilder = size => {
 //TODO Write function to send info from room class
 //Randomly selects room type and generates room node from case "switch".
 export const roomBuilder = (layout, type) => {
-	let base = {
-		north: "open",
-		south: "open",
-		east: "open",
-		west: "open"
-	};
+	let base = {};
 	type = type || "unbuilt";
 	switch (layout) {
 		case "cornerNW":
 			base = {
 				north: "wall",
-				south: "open",
-				east: "open",
 				west: "wall"
 			};
 			break;
 		case "cornerNE":
 			base = {
 				north: "wall",
-				south: "open",
-				east: "wall",
-				west: "open"
+				east: "wall"
 			};
 			break;
 		case "cornerSW":
 			base = {
-				north: "open",
 				south: "wall",
-				east: "open",
 				west: "wall"
 			};
 			break;
 		case "cornerSE":
 			base = {
-				north: "open",
 				south: "wall",
-				east: "wall",
-				west: "open"
+				east: "wall"
 			};
 			break;
 		case "northWall":
 			base = {
-				north: "wall",
-				south: "open",
-				east: "open",
-				west: "open"
+				north: "wall"
 			};
 
 		case "southWall":
 			base = {
-				north: "wall",
-				south: "wall",
-				east: "open",
-				west: "open"
+				south: "wall"
 			};
 			break;
 		case "eastWall":
 			base = {
-				north: "open",
-				south: "open",
-				east: "wall",
-				west: "open"
+				east: "wall"
 			};
 			break;
 		case "westWall":
 			base = {
-				north: "open",
-				south: "open",
-				east: "open",
 				west: "wall"
 			};
 			break;
 		case "verticalHallway":
 			base = {
-				north: "open",
-				south: "open",
 				east: "wall",
 				west: "wall"
 			};
@@ -153,15 +126,12 @@ export const roomBuilder = (layout, type) => {
 		case "horizontalHallway":
 			base = {
 				north: "wall",
-				south: "wall",
-				east: "open",
-				west: "open"
+				south: "wall"
 			};
 			break;
 		case "northDeadend":
 			base = {
 				north: "wall",
-				south: "open",
 				east: "wall",
 				west: "wall"
 			};
@@ -170,14 +140,12 @@ export const roomBuilder = (layout, type) => {
 			base = {
 				north: "wall",
 				south: "wall",
-				east: "open",
-				west: "wall"
+				east: "wall"
 			};
 			break;
 		case "southDeadend":
 			base = {
-				north: "wall",
-				south: "opem",
+				south: "wall",
 				east: "wall",
 				west: "wall"
 			};
@@ -186,8 +154,7 @@ export const roomBuilder = (layout, type) => {
 			base = {
 				north: "wall",
 				south: "wall",
-				east: "wall",
-				west: "open"
+				west: "wall"
 			};
 			break;
 		default:

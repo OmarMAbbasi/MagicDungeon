@@ -10,31 +10,36 @@ export const connectBossToStart = (rooms, curr) => {
 	// let currRoom = rooms[x][y];
 
 	while (buildQueue.length > 0) {
+		let currRoom = buildQueue.shift();
 		if (currRoom.type === "start") {
 			return true;
-		} else if (currRoom.north !== "wall") {
-			nextRoom = rooms[x][y - 1];
-			if (nextRoom.type !== "unbuilt") {
-				rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
-				currRoom.north = nextRoom;
-				nextRoom.south = currRoom;
-			}
-		} else if (currRoom.north !== "wall") {
-			nextRoom = rooms[x][y - 1];
-			if (nextRoom.type !== "unbuilt") {
-				rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
-				currRoom.north = nextRoom;
-				nextRoom.south = currRoom;
-			}
-		} else if (currRoom.north !== "wall") {
-			nextRoom = rooms[x][y - 1];
-			if (nextRoom.type !== "unbuilt") {
-				rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
-				currRoom.north = nextRoom;
-				nextRoom.south = currRoom;
+		} else {
+			if (currRoom.north !== "wall") {
+				nextRoom = rooms[x][y - 1];
+				if (nextRoom.type !== "unbuilt") {
+					rooms[x][y - 1] = nextRoom;
+					rebuilt = buildNorth(rooms, currRoom);
+					currRoom.north = nextRoom;
+					nextRoom.south = currRoom;
+				}
+			} else if (currRoom.north !== "wall") {
+				nextRoom = rooms[x][y - 1];
+				if (nextRoom.type !== "unbuilt") {
+					rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
+					currRoom.north = nextRoom;
+					nextRoom.south = currRoom;
+				}
+			} else if (currRoom.north !== "wall") {
+				nextRoom = rooms[x][y - 1];
+				if (nextRoom.type !== "unbuilt") {
+					rooms[x][y - 1] = nextRoom = buildNorth(rooms, currRoom);
+					currRoom.north = nextRoom;
+					nextRoom.south = currRoom;
+				}
 			}
 		}
 	}
+	return false;
 };
 
 // const nodeGenerator = (rooms, curr) => {};
@@ -100,9 +105,6 @@ const buildNorth = prev => {
 			}
 			break;
 	}
-
-	nextRoom.cords.x = x;
-	nextRoom.cords.y = y;
 };
 
 export const buildSouth = room => {
@@ -142,7 +144,7 @@ const NORTH = {
 		"verticalHallway"
 	],
 	PURE_NORTH: [
-		"deadendNorth",
+		"northDeadend",
 		"cornerNE",
 		"cornerNW",
 		"verticalHallway",
@@ -185,18 +187,18 @@ const SOUTH = {
 };
 //!Build East >
 const EAST = {
-	EAST_TO_SE: ["westDeadend", "cornerSW"],
-	EAST_TO_SW: ["westDeadend", "cornerNW"],
-	EAST_WALL: ["westDeadend", "cornerSE", "cornerSW", " eastWall "],
+	EAST_TO_SE: ["eastDeadend", "cornerSW"],
+	EAST_TO_SW: ["eastDeadend", "cornerNW"],
+	EAST_WALL: ["eastDeadend", "cornerSE", "cornerSW", " eastWall "],
 	EAST_ALONG_NORTH: [
-		"westDeadend",
+		"eastDeadend",
 		"cornerNE",
 		"cornerNW",
 		"northWall",
 		"horizontalHallway"
 	],
 	EAST_ALONG_SOUTH: [
-		"westDeadend",
+		"eastDeadend",
 		"cornerNE",
 		"cornerNW",
 		"southWall",
@@ -215,8 +217,8 @@ const EAST = {
 };
 //! Build West <
 const WEST = {
-	WEST_TO_SE: ["eastDeadend", "cornerSW"],
-	WEST_TO_SW: ["eastDeadend", "cornerNW"],
+	WEST_TO_SE: ["westDeadend", "cornerSW"],
+	WEST_TO_SW: ["westDeadend", "cornerNW"],
 	WEST_WALL: ["westDeadend", "cornerSE", "cornerSW", "westWall "],
 	WEST_ALONG_NORTH: [
 		"westDeadend",
