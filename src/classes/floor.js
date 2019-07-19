@@ -24,7 +24,6 @@ export default class Floor {
 				y: 0
 			}
 		};
-		debugger;
 
 		//! will be assigned X: and Y: cords
 		this.bossRoom = {
@@ -41,6 +40,7 @@ export default class Floor {
 		this.setEndpoints();
 		const conNodes = connectNodes;
 		conNodes(this.rooms, this.bossRoom);
+		debugger;
 		// let startNode = this.fillNodes(start);
 
 		console.log(this.rooms);

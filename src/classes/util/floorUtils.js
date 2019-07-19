@@ -111,6 +111,7 @@ export const roomBuilder = (layout, type) => {
 			base = {
 				north: "wall"
 			};
+			break;
 
 		case "southWall":
 			base = {

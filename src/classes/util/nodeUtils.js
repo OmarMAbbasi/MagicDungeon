@@ -7,7 +7,6 @@ export const connectNodes = (rooms, curr) => {
 	//! first curr == boss
 	// let x = curr.cords.x;
 	// let y = curr.cords.y;
-
 	let buildQueue = [curr];
 	let visited = [];
 	let found = false;
@@ -27,7 +26,7 @@ export const connectNodes = (rooms, curr) => {
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
-				debugger;
+				// debugger;
 				rebuilt = buildNorth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
@@ -39,7 +38,7 @@ export const connectNodes = (rooms, curr) => {
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
-				debugger;
+				// debugger;
 				rebuilt = buildSouth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
@@ -51,7 +50,7 @@ export const connectNodes = (rooms, curr) => {
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
-				debugger;
+				// debugger;
 				rebuilt = buildEast(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
@@ -63,19 +62,15 @@ export const connectNodes = (rooms, curr) => {
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
-				debugger;
+				// debugger;rooms
 				rebuilt = buildWest(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
 			}
 		}
-		debugger;
-		if (currRoom.type === "start") {
-			return true;
-		} else {
-			connectNodes(rooms, nextRoom);
+		if (!nextRoom) {
+			connectNodes(rooms, currRoom);
 		}
-		return false;
 	}
 	// return false;
 };
@@ -100,7 +95,7 @@ export const buildNorth = room => {
 				builtRoom = sampleSet(NORTH.NORTH_TO_NW);
 				break;
 			case 5:
-				//! SW_CORNER
+				//! NE_CORNER
 				builtRoom = sampleSet(NORTH.NORTH_TO_NE);
 				break;
 			default:
@@ -168,21 +163,21 @@ export const buildSouth = room => {
 	return builtRoom;
 };
 
-export const buildEast = room => {
+export const buildWest = room => {
 	let x = room.cords.x;
 	let y = room.cords.y;
 	let builtRoom;
 
-	//!WEST>EAST
+	//!EAST > WEST
 	if (y === 5) {
 		switch (x) {
 			case 0:
-				//! NE_CORNER
+				//! NW_CORNER
 				builtRoom = sampleSet(WEST.WEST_TO_NW);
 				break;
 			case 5:
-				//! NW_CORNER
-				builtRoom = sampleSet(WEST.WEST_TO_NE);
+				//! SW_CORNER
+				builtRoom = sampleSet(WEST.WEST_TO_SW);
 				break;
 			default:
 				//! West Wall
@@ -208,18 +203,18 @@ export const buildEast = room => {
 	return builtRoom;
 };
 
-export const buildWest = room => {
+export const buildEast = room => {
 	let x = room.cords.x;
 	let y = room.cords.y;
 
 	let builtRoom;
 
-	//!EAST > WEST
+	//!WEST>EAST
 	if (y === 0) {
 		switch (x) {
 			case 0:
-				//! SW_CORNER
-				builtRoom = sampleSet(EAST.EAST_TO_SW);
+				//! NE_CORNER
+				builtRoom = sampleSet(EAST.EAST_TO_NE);
 				break;
 			case 5:
 				//! SE_CORNER
@@ -234,15 +229,15 @@ export const buildWest = room => {
 		switch (x) {
 			case 0:
 				//!North Wall
-				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_WEST);
+				builtRoom = sampleSet(EAST.EAST_ALONG_NORTH);
 				break;
 			case 5:
 				//!South Wall
-				builtRoom = sampleSet(SOUTH.SOUTH_ALONG_EAST);
+				builtRoom = sampleSet(EAST.EAST_ALONG_SOUTH);
 
 			default:
 				//!Pure
-				builtRoom = sampleSet(SOUTH.PURE_SOUTH);
+				builtRoom = sampleSet(EAST.PURE_EAST);
 				break;
 		}
 	}
@@ -251,25 +246,14 @@ export const buildWest = room => {
 
 //! ROOM POOLS: Separated by build direction.
 //TODO get pools to export to another file.
+
+//!!BUILD SOUTH>NORTH
 export const NORTH = {
 	NORTH_TO_NW: ["northDeadend", "cornerNW"],
 	NORTH_TO_NE: ["northDeadend", "cornerNE"],
 	NORTH_WALL: ["northDeadend", "cornerNE", "cornerNW", "northWall"],
-	NORTH_ALONG_WEST: [
-		"northDeadend",
-		"cornerNE",
-		"cornerNW",
-		"westWall",
-		"verticalHallway"
-	],
-
-	NORTH_ALONG_EAST: [
-		"northDeadend",
-		"cornerNE",
-		"cornerNW",
-		"eastWall",
-		"verticalHallway"
-	],
+	NORTH_ALONG_WEST: ["northDeadend", "cornerNW", "westWall", "verticalHallway"],
+	NORTH_ALONG_EAST: ["northDeadend", "cornerNE", "eastWall", "verticalHallway"],
 	PURE_NORTH: [
 		"northDeadend",
 		"cornerNE",
@@ -282,25 +266,13 @@ export const NORTH = {
 	]
 };
 
-//!!BUILD SOUTH v
+//!!BUILD NORTH>SOUTH
 export const SOUTH = {
 	SOUTH_TO_SW: ["southDeadend", "cornerSW"],
 	SOUTH_TO_SE: ["southDeadend", "cornerSE"],
 	SOUTH_WALL: ["southDeadend", "cornerSE", "cornerSW", "southWall"],
-	SOUTH_ALONG_WEST: [
-		"southDeadend",
-		"cornerNE",
-		"cornerNW",
-		"westWall",
-		"verticalHallway"
-	],
-	SOUTH_ALONG_EAST: [
-		"southDeadend",
-		"cornerNE",
-		"cornerNW",
-		"eastWall",
-		"verticalHallway"
-	],
+	SOUTH_ALONG_WEST: ["southDeadend", "cornerSW", "westWall", "verticalHallway"],
+	SOUTH_ALONG_EAST: ["southDeadend", "cornerSE", "eastWall", "verticalHallway"],
 	PURE_SOUTH: [
 		"southDeadend",
 		"cornerSW",
@@ -312,22 +284,20 @@ export const SOUTH = {
 		"open"
 	]
 };
-//!Build East >
+//!Build WEST > EAST
 export const EAST = {
-	EAST_TO_SE: ["eastDeadend", "cornerSW"],
-	EAST_TO_SW: ["eastDeadend", "cornerNW"],
+	EAST_TO_SE: ["eastDeadend", "cornerSE"],
+	EAST_TO_SW: ["eastDeadend", "cornerSW"],
 	EAST_WALL: ["eastDeadend", "cornerSE", "cornerSW", " eastWall "],
 	EAST_ALONG_NORTH: [
 		"eastDeadend",
 		"cornerNE",
-		"cornerNW",
 		"northWall",
 		"horizontalHallway"
 	],
 	EAST_ALONG_SOUTH: [
 		"eastDeadend",
-		"cornerNE",
-		"cornerNW",
+		"cornerSE",
 		"southWall",
 		"horizontalHallway"
 	],
@@ -342,24 +312,22 @@ export const EAST = {
 		"open"
 	]
 };
-//! Build West <
+//! Build EAST>WEST
 export const WEST = {
-	WEST_TO_SE: ["westDeadend", "cornerSW"],
-	WEST_TO_SW: ["westDeadend", "cornerNW"],
-	WEST_WALL: ["westDeadend", "cornerSE", "cornerSW", "westWall "],
+	WEST_TO_NW: ["westDeadend", "cornerNW"],
+	WEST_TO_SW: ["westDeadend", "cornerSW"],
+	WEST_WALL: ["westDeadend", "cornerNW", "cornerSW", "westWall"],
 	WEST_ALONG_NORTH: [
 		"westDeadend",
-		"cornerNE",
 		"cornerNW",
-		"northWall",
-		"horizontalHallway"
+		"horizontalHallway",
+		"northWall"
 	],
 	WEST_ALONG_SOUTH: [
 		"westDeadend",
-		"cornerNE",
-		"cornerNW",
-		"southWall",
-		"horizontalHallway"
+		"cornerSW",
+		"horizontalHallway",
+		"southWall"
 	],
 	PURE_WEST: [
 		"southDeadend",
