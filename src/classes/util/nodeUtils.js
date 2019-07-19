@@ -20,6 +20,7 @@ export const connectNodes = (rooms, curr) => {
 		if (currRoom.type === "start") {
 			return true;
 		}
+		let rebuilt;
 		if (currRoom.north && currRoom.north !== "wall") {
 			nextRoom = currRoom.north;
 			if (
@@ -27,40 +28,43 @@ export const connectNodes = (rooms, curr) => {
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
 				debugger;
-				let rebuilt = buildNorth(nextRoom);
+				rebuilt = buildNorth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
 			}
-		} else if (currRoom.south && currRoom.south !== "wall") {
+		}
+		if (currRoom.south && currRoom.south !== "wall") {
 			nextRoom = currRoom.south;
 			if (
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
 				debugger;
-				let rebuilt = buildSouth(nextRoom);
+				rebuilt = buildSouth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
 			}
-		} else if (currRoom.east && currRoom.east !== "wall") {
+		}
+		if (currRoom.east && currRoom.east !== "wall") {
 			nextRoom = currRoom.east;
 			if (
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
 				debugger;
-				let rebuilt = buildEast(nextRoom);
+				rebuilt = buildEast(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
 			}
-		} else if (currRoom.west && currRoom.west !== "wall") {
+		}
+		if (currRoom.west && currRoom.west !== "wall") {
 			nextRoom = currRoom.west;
 			if (
 				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
 				debugger;
-				let rebuilt = buildWest(nextRoom);
+				rebuilt = buildWest(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
 				buildQueue.unshift(nextRoom);
 			}
@@ -83,48 +87,46 @@ const sampleSet = set => {
 	return rBuilder(layout, "built");
 };
 
-const buildNorth = room => {
+export const buildNorth = room => {
 	let x = room.cords.x;
 	let y = room.cords.y;
 	let builtRoom;
-	switch (x) {
+	if (x) {
 		//!SOUTH > NORTH
-		case 0:
-			//!West
-			switch (y) {
-				case 0:
-					//! NW_CORNER
-					builtRoom = sampleSet(NORTH.NORTH_TO_NW);
-					break;
-				case 5:
-					//! SW_CORNER
-					builtRoom = sampleSet(NORTH.NORTH_TO_NE);
-					break;
-				default:
-					//! North Wall
-					builtRoom = sampleSet(NORTH.NORTH_WALL);
-					break;
-			}
-			break;
-		default:
-			switch (y) {
-				case 0:
-					//!WestWall
-					builtRoom = sampleSet(NORTH.NORTH_ALONG_WEST);
-					break;
-				case 5:
-					//!EastWall
-					builtRoom = sampleSet(NORTH.NORTH_ALONG_EAST);
-
-				default:
-					//!Pure
-					builtRoom = sampleSet(NORTH.PURE_NORTH);
-					break;
-			}
-			break;
+		//!West
+		switch (y) {
+			case 0:
+				//! NW_CORNER
+				builtRoom = sampleSet(NORTH.NORTH_TO_NW);
+				break;
+			case 5:
+				//! SW_CORNER
+				builtRoom = sampleSet(NORTH.NORTH_TO_NE);
+				break;
+			default:
+				//! North Wall
+				builtRoom = sampleSet(NORTH.NORTH_WALL);
+				break;
+		}
+	} else {
+		switch (y) {
+			case 0:
+				//!WestWall
+				builtRoom = sampleSet(NORTH.NORTH_ALONG_WEST);
+				break;
+			case 5:
+				//!EastWall
+				builtRoom = sampleSet(NORTH.NORTH_ALONG_EAST);
+				break;
+			default:
+				//!Pure
+				builtRoom = sampleSet(NORTH.PURE_NORTH);
+				break;
+		}
 	}
 	return builtRoom;
 };
+
 //* WORKING
 
 export const buildSouth = room => {
