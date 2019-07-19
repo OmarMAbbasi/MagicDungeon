@@ -20,7 +20,7 @@ export const floorBuilder = size => {
 	times(size - 2, () => {
 		let row = [];
 		_.times(size - 2, () => {
-			row.push(roomBuilder("openRom"));
+			row.push(roomBuilder("openRoom"));
 		});
 		row.push(roomBuilder("eastWall"));
 		row.unshift(roomBuilder("westWall"));

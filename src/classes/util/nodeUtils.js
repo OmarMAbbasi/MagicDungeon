@@ -18,57 +18,61 @@ export const connectNodes = (rooms, curr) => {
 		visited.push(currRoom);
 		let nextRoom;
 		if (currRoom.type === "start") {
-			// return true;
-			found = true;
+			return true;
 		}
 		if (currRoom.north && currRoom.north !== "wall") {
 			nextRoom = currRoom.north;
 			if (
-				(nextRoom.type === "unbuilt") &
+				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
+				debugger;
 				let rebuilt = buildNorth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
-				// debugger;
 				buildQueue.unshift(nextRoom);
 			}
 		} else if (currRoom.south && currRoom.south !== "wall") {
 			nextRoom = currRoom.south;
 			if (
-				(nextRoom.type === "unbuilt") &
+				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
+				debugger;
 				let rebuilt = buildSouth(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
-				// debugger;
 				buildQueue.unshift(nextRoom);
 			}
 		} else if (currRoom.east && currRoom.east !== "wall") {
 			nextRoom = currRoom.east;
 			if (
-				(nextRoom.type === "unbuilt") &
+				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
+				debugger;
 				let rebuilt = buildEast(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
-				// debugger;
 				buildQueue.unshift(nextRoom);
 			}
 		} else if (currRoom.west && currRoom.west !== "wall") {
 			nextRoom = currRoom.west;
 			if (
-				(nextRoom.type === "unbuilt") &
+				nextRoom.type === "unbuilt" &&
 				(nextRoom.type !== "start" || nextRoom.type !== "boss")
 			) {
+				debugger;
 				let rebuilt = buildWest(nextRoom);
 				nextRoom = _.merge(nextRoom, rebuilt);
-				// debugger;
 				buildQueue.unshift(nextRoom);
 			}
 		}
 		debugger;
+		if (currRoom.type === "start") {
+			return true;
+		} else {
+			connectNodes(rooms, nextRoom);
+		}
+		return false;
 	}
-	return found;
 	// return false;
 };
 
