@@ -39,13 +39,47 @@ export default class Floor {
 		this.genEndpoints();
 		this.setEndpoints();
 		const conNodes = connectNodes;
-		conNodes(this.rooms, this.bossRoom);
-		debugger;
+		let found = true;
+		let i = 0;
+
+		while (found !== "blocked") {
+			this.rooms.forEach(row => {
+				row.forEach(room => {
+					found = conNodes(this.rooms, room, this.startRoom);
+					i++;
+					console.log(i);
+				});
+			});
+			if (i > 36) {
+				break;
+			}
+		}
+
+		this.rooms.forEach(row => {
+			row.forEach(room => {
+				console.log(room.type);
+				room.type = "blocked";
+			});
+		});
+
+		// while (found) {}
+
+		// found = conNodes(this.rooms, this.bossRoom, this.startRoom);
+		// while (!found) {
+		// 	found = conNodes(this.rooms, this.bossRoom, this.startRoom);
+		// }
+		// debugger;
+		// while (found) {
+		// 	debugger;
+
+		// 	found = conNodes(this.rooms, this.startRoom, this.bossRoom);
+		// }
+		// debugger;
+		console.log(this.rooms);
 		// let startNode = this.fillNodes(start);
 
-		console.log(this.rooms);
-		console.log(this.bossRoom);
-		console.log(this.startRoom);
+		// console.log(this.bossRoom);
+		// console.log(this.startRoom);
 	}
 
 	//* Generates a start room and an end room in opposite quadrents
@@ -138,11 +172,5 @@ export default class Floor {
 		let boss = this.rooms[x][y];
 		this.bossRoom = _.merge(boss, this.bossRoom);
 		this.rooms[x][y] = this.bossRoom;
-
-		this.rooms.forEach(row => {
-			row.forEach(room => {
-				console.log(room.type);
-			});
-		});
 	}
 }
