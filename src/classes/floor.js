@@ -42,7 +42,7 @@ export default class Floor {
 		let found = true;
 		let i = 0;
 
-		while (found !== "blocked") {
+		while (found || found !== "blocked") {
 			this.rooms.forEach(row => {
 				row.forEach(room => {
 					found = conNodes(this.rooms, room, this.startRoom);
@@ -58,7 +58,7 @@ export default class Floor {
 		this.rooms.forEach(row => {
 			row.forEach(room => {
 				console.log(room.type);
-				room.type = "blocked";
+				// room.type = "blocked";
 			});
 		});
 
