@@ -1,0 +1,45 @@
+.slide-right {
+	width: 16px;
+	height: 28px;
+	animation: slide-right 0.5s steps(4, end) infinite both;
+	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+	transform: scale(2.5, 2.5);
+	display: inline-block;
+}
+
+@keyframes slide-right {
+	from {
+		background-position: top -132px left -128px;
+	}
+	to {
+		background-position: top -132px left -192px;
+	}
+}
+
+.slide-left {
+	width: 16px;
+	height: 28px;
+	animation: slide-left 0.5s steps(4, end) infinite both;
+	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+	transform: scale(-2.5, 2.5);
+	display: inline-block;
+}
+
+@keyframes slide-left {
+	from {
+		background-position: top -132px left -128px;
+	}
+	to {
+		background-position: top -132px left -192px;
+	}
+}
+
+.static-room {
+	width: 950px;
+	height: 950px;
+	background-image: url("../assets/4door/start_room_2.png");
+	background-repeat: no-repeat;
+	background-size: 950px;
+	display: grid;
+	margin: 0 0 auto;
+}
