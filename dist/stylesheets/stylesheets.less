@@ -1,45 +1,134 @@
-.slide-right {
-	width: 16px;
-	height: 28px;
-	animation: slide-right 0.5s steps(4, end) infinite both;
-	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
-	transform: scale(2.5, 2.5);
-	display: inline-block;
+/**
+ * Global Reset of all HTML Elements
+ *
+ * Resetting all of our HTML Elements ensures a smoother
+ * visual transition between browsers. If you don't believe me,
+ * try temporarily commenting out this block of code, then go
+ * and look at Mozilla versus Safari, both good browsers with
+ * a good implementation of CSS. The thing is, all browser CSS
+ * defaults are different and at the end of the day if visual
+ * consistency is what we're shooting for, then we need to
+ * make sure we're resetting all spacing elements.
+ *
+ */
+html,
+body {
+	border: 0;
+	font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0;
 }
 
-@keyframes slide-right {
-	from {
-		background-position: top -132px left -128px;
-	}
-	to {
-		background-position: top -132px left -192px;
+div,
+span,
+object,
+iframe,
+img,
+table,
+caption,
+thead,
+tbody,
+tfoot,
+tr,
+tr,
+td,
+article,
+aside,
+canvas,
+details,
+figure,
+hgroup,
+menu,
+nav,
+footer,
+header,
+section,
+summary,
+mark,
+audio,
+video {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+address,
+cit,
+code,
+del,
+dfn,
+em,
+ins,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+b,
+i,
+hr,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+legend,
+label {
+	border: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	margin: 0;
+	padding: 0;
+}
+
+article,
+aside,
+canvas,
+figure,
+figure img,
+figcaption,
+hgroup,
+footer,
+header,
+nav,
+section,
+audio,
+video {
+	display: block;
+}
+
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	caption,
+	th,
+	td {
+		text-align: left;
+		vertical-align: middle;
 	}
 }
 
-.slide-left {
-	width: 16px;
-	height: 28px;
-	animation: slide-left 0.5s steps(4, end) infinite both;
-	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
-	transform: scale(-2.5, 2.5);
-	display: inline-block;
+a img {
+	border: 0;
 }
 
-@keyframes slide-left {
-	from {
-		background-position: top -132px left -128px;
-	}
-	to {
-		background-position: top -132px left -192px;
-	}
+:focus {
+	outline: 0;
 }
 
-.static-room {
-	width: 950px;
-	height: 950px;
-	background-image: url("../assets/4door/start_room_2.png");
-	background-repeat: no-repeat;
-	background-size: 950px;
-	display: grid;
-	margin: 0 0 auto;
-}
+
