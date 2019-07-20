@@ -1,0 +1,20 @@
+.generate-columns(24);
+
+.generate-columns(@n, @i: 1) when (@i =< @n) {
+	.column-@{i} {
+		width: (@i * 100% / @n);
+	}
+    .generate-columns(@n, (@i + 1));
+    
+}
+
+.generate-rows(24);
+
+.generate-rows(@n, @i: 1) when (@i =< @n) {
+	.row-@{i} {
+		width: (@i * 100% / @n);
+	}
+	.generate-rows(@n, (@i + 1));
+}
+
+
