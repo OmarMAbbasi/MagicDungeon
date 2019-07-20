@@ -1,11 +1,58 @@
-.slide-right {
+.slide-out-right {
 	width: 16px;
 	height: 28px;
-	animation: slide-out-right 0.5s steps(4) infinite both;
+	animation: slide-out-right .75s steps(4, start) infinite both;
 	/* animation: slide-right 0.5s steps(4) infinite both; */
 	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
 }
 @keyframes slide-out-right {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	0% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(32px) scale(1.5);
+		opacity: 1;
+	}
+}
+.wizzard_f_idle_anim {
+	width: 16px;
+	height: 28px;
+	animation: wizzard_f_idle_anim 0.5s steps(4, start) infinite both;
+	/* animation: slide-right 0.5s steps(4) infinite both; */
+	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+}
+@keyframes wizzard_f_idle_anim {
+	from {
+		background-position: top -132px right 128px;
+	}
+	to {
+		background-position: top -132px right 192px;
+	}
+	0% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
+}
+
+.slide-out-left {
+	width: 16px;
+	height: 28px;
+	animation: slide-out-left 0.5s steps(4, end) infinite both;
+	/* animation: slide-left 0.5s steps(4) infinite both; */
+	// background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+}
+@keyframes slide-out-left {
 	from {
 		background-position: top -132px left -128px;
 	}
@@ -13,12 +60,15 @@
 		background-position: top -132px left -192px;
 	}
 	0% {
-		transform: translateX(0) scale(2);
+		transform: translateX(0) scale(-1.5, 1.5);
+		opacity: 1;
 	}
 	100% {
-		transform: translateX(64px) scale(2);
+		transform: translateX(64px) scale(-1.5, 1.5);
+		opacity: 1;
 	}
 }
+
 .slide-left {
 	width: 16px;
 	height: 28px;
@@ -34,4 +84,11 @@
 	to {
 		background-position: top -132px left -192px;
 	}
+}
+
+.floor-square {
+	display: flex;
+	// overflow: hidden;
+	align-items: flex-start;
+	justify-content: center;
 }
