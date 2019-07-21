@@ -1,20 +1,23 @@
-.generate-columns(24);
-
-.generate-columns(@n, @i: 1) when (@i =< @n) {
-	.column-@{i} {
-		width: (@i * 100% / @n);
-	}
-    .generate-columns(@n, (@i + 1));
-    
-}
-
 .generate-rows(24);
 
 .generate-rows(@n, @i: 1) when (@i =< @n) {
 	.row-@{i} {
-		width: (@i * 100% / @n);
+		min-height: 34px;
+		display: flex;
+		flex: 0 1 34px;
+		background: pink;
+		opacity: 0.1;
+		.generate-columns(24);
+
+		.generate-columns(@n, @i: 1) when (@i =< @n) {
+			.col-@{i} {
+				min-width: 34px;
+
+				background: pink;
+				opacity: 0.1;
+			}
+			.generate-columns(@n, (@i + 1));
+		}
 	}
 	.generate-rows(@n, (@i + 1));
 }
-
-

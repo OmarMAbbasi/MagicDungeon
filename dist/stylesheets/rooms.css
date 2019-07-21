@@ -7,22 +7,31 @@
   justify-content: center;
 }
 .room-holder {
-  display: grid;
-  grid-template-columns: repeat(24, 1fr);
-  grid-template-rows: repeat(24, 1fr);
-  height: 800px;
-  width: 800px;
-  grid-column-gap: 0px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  min-height: 800px;
+  min-width: 800px;
+  flex: 1 0 auto;
+  background-image: url("../assets/Boss_Room_950x.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  align-items: center;
+  justify-content: center;
+  background-position: center center;
+  padding: 75px;
 }
 .static-room {
   width: 950px;
   height: 100vh;
-  background-image: url("../assets/Boss_Room_950x.png");
-  background-repeat: no-repeat;
-  /* background-size: contain; */
   display: flex;
+  flex: 0 1 auto;
   margin: 0 auto;
   align-items: center;
   justify-content: center;
   background-position: center center;
+}
+.floor {
+  min-width: 32px;
+  min-height: 32px;
 }
