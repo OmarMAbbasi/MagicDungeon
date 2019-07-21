@@ -3,18 +3,20 @@
 .generate-rows(@n, @i: 1) when (@i =< @n) {
 	.row-@{i} {
 		min-height: 34px;
+		min-width: 34px;
 		display: flex;
-		flex: 0 1 34px;
-		background: pink;
-		opacity: 0.1;
+		align-items: flex-start;
+		justify-content: center;
+		flex: 1 0 auto;
 		.generate-columns(24);
 
 		.generate-columns(@n, @i: 1) when (@i =< @n) {
 			.col-@{i} {
 				min-width: 34px;
-
-				background: pink;
-				opacity: 0.1;
+				min-height: 34px;
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
 			}
 			.generate-columns(@n, (@i + 1));
 		}
