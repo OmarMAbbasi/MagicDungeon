@@ -2,12 +2,13 @@
 import { floorBuilder } from "./classes/util/floorUtils";
 import { debounce, throttle } from "lodash";
 import Floor from "./classes/floor";
+import Game from "./classes/game.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 	let grid = newGame();
-	document.body.appendChild(grid);
+	// document.body.appendChild(grid);
 	let floor = new Floor(6);
-	const game = new Game(grid, floor);
+	new Game(grid, floor);
 });
 
 function newGame() {
@@ -37,46 +38,19 @@ function newGame() {
 			col.className = colClass + c;
 			row.appendChild(col);
 			let box = document.createElement("div");
-			box.id = `${r}${c}`;
+			box.className = " ";
+			col.appendChild(box);
+			currRow.push(box);
 		}
 		gameBoard.push(currRow);
 	}
 
-	gameBoard[1][1].className = "wizzard_f_idle_anim";
-
 	// debugger;
 
 	// let test = _.throttle(walkRight, 750);
-	document.addEventListener("keypress", e => {
-		debugger;
-		switch (e.keyCode) {
-			case 68:
-				let throttle = _.throttle(walkRight, 750);
-				throttle(gameBoard, charData);
-				break;
 
-			default:
-				break;
-		}
-	});
+	document.body.appendChild(gameBox);
 
-	return gameBox;
+	return gameBoard;
 }
 
-function walkRight(gameBoard, charData) {
-	let x = charData.x;
-	let y = charData.y;
-	debugger;
-
-	gameBoard[x][y].className = "slide-out-right";
-
-	setTimeout(() => {
-		gameBoard[x][y].className = "nothing";
-		gameBoard[x][y + 1].className = "wizzard_f_idle_anim";
-		charData = {
-			char: gameBoard[x][y + 1],
-			x: x,
-			y: y + 1
-		};
-	}, 750);
-}
