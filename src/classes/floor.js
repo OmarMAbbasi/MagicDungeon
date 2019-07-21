@@ -6,7 +6,6 @@ export default class Floor {
 	constructor(size) {
 		//*Default = 6 x 6
 		//!rooms=[x,y]
-
 		this.rBuilder = roomBuilder;
 		const fBuilder = floorBuilder;
 		const nodes = connectNodes;
@@ -163,6 +162,7 @@ export default class Floor {
 	}
 
 	setEndpoints() {
+
 		let x = this.startRoom.cords.x;
 		let y = this.startRoom.cords.y;
 

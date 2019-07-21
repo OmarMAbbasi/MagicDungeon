@@ -7,8 +7,7 @@ import Game from "./classes/game.js";
 document.addEventListener("DOMContentLoaded", () => {
 	let grid = newGame();
 	// document.body.appendChild(grid);
-	let floor = new Floor(6);
-	new Game(grid, floor);
+	new Game(grid);
 });
 
 function newGame() {
@@ -53,4 +52,3 @@ function newGame() {
 
 	return gameBoard;
 }
-

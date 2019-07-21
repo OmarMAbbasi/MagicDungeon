@@ -1,70 +1,159 @@
-import { throttle } from "lodash";
+import { throttle, debounce } from "lodash";
+import Floor from "./floor";
 
 export default class Game {
 	constructor(grid, floor) {
 		this.grid = grid;
-		this.floor = floor;
+		this.floor = new Floor(6);
 		this.bindKeys();
-		this.charData = {
+		this.charPos = {
 			square: this.grid[1][1],
 			row: 1,
 			col: 1
 		};
-		grid[1][1].className = "wizzard_f_idle_anim";
+		this.keys = {
+			up: false,
+			down: false,
+			right: false,
+			left: false
+		};
+		this.grid[1][1].className = "wizzard_f_idle_anim";
 		// this.walkRight = this.walkRight.bind(this);
-		this.throtRight = _.throttle(this.walkRight, 750);
+
+		this.row = 0;
+		this.col = 0;
+		this.prev;
+		// this.throtRight = _.throttle(this.walkRight, 750);
+		this.resetHor = _.debounce(this.debHor, 0, 0, 750);
+		this.resetVert = _.debounce(this.debVert, 750);
+		this.throttledMoveRight = _.throttle(this.throttledMoveRight, 750);
+		this.throttledMoveLeft = _.throttle(this.throttledMoveLeft, 750);
+		this.throttledMoveDown = _.throttle(this.throttledMoveDown, 750);
+		this.throttledMoveUp = _.throttle(this.throttledMoveUp, 750);
+		this.bounce = _.throttle(this.debtest, 750);
+		this.idle = _.debounce(this.resetAnimation, 750);
 		// this.throtRight = _.throttle(this.walkRight, 750);
 	}
 
-	walkRight() {
-		let row = this.charData.row;
-		let col = this.charData.col;
-		let grid = this.grid;
-		let charData = this.charData;
+	throttledMoveRight() {
+		if (this.row !== 1) {
+			this.row = 1;
+		}
+	}
 
-		grid[row][col].className = "slide-out-right";
+	throttledMoveLeft() {
+		if (this.row !== -1) {
+			this.row = -1;
+		}
+	}
+
+	throttledMoveDown() {
+		if (this.col !== 1) {
+			this.col = 1;
+		}
+	}
+
+	throttledMoveUp() {
+		if (this.col !== -1) {
+			this.col = -1;
+		}
+	}
+
+	debHor() {
+		if (this.keys.left && this.keys.right) {
+			this.col = 0;
+		}
+	}
+
+	debVert() {
+		if (this.keys.up && this.keys.down) {
+			this.row = 0;
+		}
+	}
+
+	resetAnimation() {
+		let [square, row, col] = Object.values(this.charPos);
+		this.charPos.square.className = "wizzard_f_idle_anim";
+	}
+
+	debtest() {
+		let [square, row, col] = Object.values(this.charPos);
+		row += this.row;
+		col += this.col;
+		let next = this.grid[col][row];
+		let prev = this.charPos.square;
+		this.charPos.square.className = "slide-out-right";
 		setTimeout(() => {
-			grid[row][col].className = `${row}${col}`;
-			grid[row][col + 1].className = "wizzard_f_idle_anim";
-
-			debugger;
-		}, 745);
-		charData = {
-			square: grid[row][col + 1],
-			row: row,
-			col: col + 1
-		};
-		debugger;
-		this.charData = charData;
+			prev.className = "square";
+		}, 750);
+		this.idle();
+		Object.assign(this.charPos, { row: row, col: col, square: next });
 	}
 
 	bindKeys() {
 		document.addEventListener("keydown", e => {
+			// console.log(e.keyCode);
 			switch (e.keyCode) {
+				case 87: // W
+				case 38:
+					this.keys.up = true;
+					this.throttledMoveUp();
+					this.bounce();
+					break;
+				case 83: // S
+				case 40:
+					this.keys.down = true;
+					this.throttledMoveDown();
+					this.bounce();
+					break;
+				case 65: // A
+				case 37:
+					this.keys.left = true;
+					this.throttledMoveLeft();
+					this.bounce();
+					break;
 				case 68: // D
-				case 39: // RightArrow
-					this.throtRight();
+				case 39:
+					this.keys.right = true;
+					this.throttledMoveRight();
+
+					this.bounce();
+					break;
+				default:
+					break;
+			}
+		});
+		document.addEventListener("keyup", e => {
+			// console.log(e.keyCode);
+			switch (e.keyCode) {
+				case 87: // W
+				case 38:
+					debugger;
+					this.keys.up = false;
+					this.resetVert();
+
+					break;
+				case 83: // S
+				case 40:
+					debugger;
+					this.keys.down = false;
+					this.resetVert();
+					break;
+				case 65: // A
+				case 37:
+					debugger;
+					this.keys.left = false;
+					this.resetHor();
+					break;
+				case 68: // D
+				case 39:
+					debugger;
+					this.keys.right = false;
+					this.resetHor();
+					break;
 				default:
 					break;
 			}
 		});
 	}
-
-	// walkRight() {
-	// 	console.log("hi");
-	// 	let x = charData.x;
-	// 	let y = charData.y;
-	// 	// debugger;
-
-	// 	gameBoard[x][y].className = "slide-out-right";
-
-	// 	setTimeout(() => {
-	// 		gameBoard[x][y].className = "nothing";
-	// 		gameBoard[x][y + 1].className = "wizzard_f_idle_anim";
-	// 		charData = {
-	// 			char: gameBoard[x][y + 1],
-	// 			x: x,
-	// 			y: y + 1
-	// 		};
-	// 	}, 750);
 }
