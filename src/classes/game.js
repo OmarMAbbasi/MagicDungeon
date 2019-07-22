@@ -2,6 +2,22 @@ import { throttle, debounce } from "lodash";
 import Floor from "./floor";
 import Room from "./rooms/room";
 
+let TRANSITIONS_IN = [
+	"scale-in-top",
+	"rotate-in-center",
+	"roll-in-blurred-left",
+	"swirl-in-fwd",
+	"puff-in-center"
+];
+
+let TRANSITIONS_OUT = [
+	"scale-out-top",
+	"rotate-out-center",
+	"roll-out-blurred",
+	"swirl-out-fwd",
+	"puff-out-center"
+];
+
 export default class Game {
 	constructor(grid, floor) {
 		this.grid = grid;
@@ -19,20 +35,25 @@ export default class Game {
 		};
 
 		this.charPos = {
-			square: this.grid[12][3],
+			square: this.grid[12][11],
 			row: 12,
-			col: 3
+			col: 11
 		};
 		this.facing = "right";
 
-		this.grid[12][3].className = "wiz";
-		this.grid[12][3].classList.add("idle-right");
+		this.grid[12][11].className = "wiz";
+		this.grid[12][11].classList.add("idle-right");
 
 		this.throttledMove = _.throttle(this.move, 750);
 
 		this.bouncedIdle = _.debounce(this.idle, 750);
 
 		//!!Floor Management
+	}
+
+	nextRoom(room) {
+		this.floor.setCurrentRoom(room);
+		debugger;
 	}
 
 	checkNorthDoor(row, col, shift) {
@@ -43,7 +64,7 @@ export default class Game {
 			(col === 12 || col === 11)
 		) {
 			if (row === 0) {
-				console.log("roomChange");
+				this.nextRoom(this.floor.currentRoom);
 			} else {
 				shift--;
 			}
@@ -51,7 +72,6 @@ export default class Game {
 		return shift;
 	}
 	checkSouthDoor(row, col, shift) {
-		debugger;
 		if (row < 22) {
 			shift++;
 		} else if (
@@ -59,7 +79,7 @@ export default class Game {
 			(col === 12 || col === 11)
 		) {
 			if (row === 23) {
-				console.log("roomChange");
+				this.nextRoom(this.floor.currentRoom);
 			} else {
 				shift++;
 			}
@@ -67,7 +87,6 @@ export default class Game {
 		return shift;
 	}
 	checkEastDoor(row, col, shift) {
-		debugger;
 		if (col < 22) {
 			shift++;
 		} else if (
@@ -75,7 +94,7 @@ export default class Game {
 			(row === 12 || row === 11)
 		) {
 			if (col === 23) {
-				console.log("roomChange");
+				this.nextRoom(this.floor.currentRoom);
 			} else {
 				shift++;
 			}
@@ -91,7 +110,7 @@ export default class Game {
 			(row === 12 || row === 11)
 		) {
 			if (col === 0) {
-				console.log("roomChange");
+				this.nextRoom(this.floor.currentRoom);
 			} else {
 				shift--;
 			}

@@ -82,12 +82,16 @@ export default class Floor {
 						done = false;
 				});
 			});
+			if (this.startRoom.type !== "start" || this.bossRoom.type !== "boss") {
+				done = false;
+			}
 		}
+		console.log(this.startRoom);
+		console.log(this.bossRoom);
+		this.cleanStart();
 
 		this.currentRoom = this.startRoom;
 		console.log(this.rooms);
-		console.log(this.startRoom.cords);
-		console.log(this.bossRoom.cords);
 	}
 
 	//* Generates a start room and an end room in opposite quadrents
@@ -99,8 +103,129 @@ export default class Floor {
 		this.setBossExit();
 	}
 
+	cleanStart() {
+		let north = this.startRoom.north;
+		north.south = this.startRoom;
+		switch (north.layout) {
+			case "horizontalHallway":
+				north.layout = "northWall";
+				break;
+			case "cornerSE":
+				north.layout = "eastWall";
+				break;
+			case "cornerSW":
+				north.layout = "westWall";
+				break;
+			case "southWall":
+				north.layout = "open";
+				break;
+			case "southDeadend":
+				north.layout = "verticalHallway";
+				break;
+			case "eastDeadend":
+				north.layout = "cornerNE";
+				break;
+			case "westDeadend":
+				north.layout = "cornerNW";
+				break;
+			default:
+				break;
+		}
+
+		let south = this.startRoom.south;
+		south.north = this.startRoom;
+		switch (south.layout) {
+			case "horizontalHallway":
+				south.layout = "southWall";
+				break;
+			case "cornerNE":
+				south.layout = "eastWall";
+				break;
+			case "cornerNW":
+				south.layout = "westWall";
+				break;
+			case "northWall":
+				south.layout = "open";
+				break;
+			case "northDeadend":
+				south.layout = "verticalHallway";
+				break;
+			case "eastDeadend":
+				south.layout = "cornerSE";
+				break;
+			case "westDeadend":
+				south.layout = "cornerSW";
+				break;
+			default:
+				break;
+		}
+
+		let east = this.startRoom.east;
+		east.west = this.startRoom;
+		switch (east.layout) {
+			case "vertical":
+				east.layout = "eastWall";
+				break;
+			case "cornerNE":
+				east.layout = "northWall";
+				break;
+			case "cornerSE":
+				east.layout = "southWall";
+				break;
+			case "westWall":
+				east.layout = "open";
+				break;
+			case "westDeadend":
+				east.layout = "horizontalHighway";
+				break;
+
+			case "northDeadend":
+				east.layout = "cornerNE";
+				break;
+			case "southDeadend":
+				east.layout = "cornerSE";
+				break;
+			default:
+				break;
+		}
+
+		let west = this.startRoom.west;
+		west.east = this.startRoom;
+		switch (west.layout) {
+			case "vertical":
+				west.layout = "westWall";
+				break;
+			case "cornerNW":
+				west.layout = "northWall";
+				break;
+			case "cornerSW":
+				west.layout = "southWall";
+				break;
+			case "eastWall":
+				west.layout = "open";
+				break;
+			case "eastDeadend":
+				west.layout = "horizontalHighway";
+				break;
+			case "northDeadend":
+				west.layout = "cornerNE";
+				break;
+			case "southDeadend":
+				west.layout = "cornerSW";
+				break;
+			default:
+				break;
+		}
+	}
+
 	setBossQuad(q) {
 		this.bossRoom.quad = this.bossRoom.quad || q;
+	}
+
+	setCurrentRoom(room) {
+		let view = document.getElementsByClassName("room-holder");
+
+		this.currentRoom = room;
 	}
 
 	setBossExit() {
@@ -108,7 +233,7 @@ export default class Floor {
 		let layouts;
 		switch (quad) {
 			case 1:
-				layouts = _.sample(["northDeadend", "westDeadend"]);
+				layouts = _.sample(["westDeadend", "westDeadend"]);
 				// this.bossRoom.layout = layouts[_.random(0, 1)];
 				break;
 
@@ -146,7 +271,7 @@ export default class Floor {
 				this.setBossQuad(4);
 			} else if (quad === 2) {
 				cords.y = _.random(3, 4);
-				this.setBossQuad(2);
+				this.setBossQuad(3);
 			}
 		}
 
@@ -156,7 +281,7 @@ export default class Floor {
 
 			if (quad === 3) {
 				cords.y = _.random(1, 2);
-				this.setBossQuad(3);
+				this.setBossQuad(2);
 			} else if (quad === 4) {
 				cords.y = _.random(2, 3);
 				this.setBossQuad(1);

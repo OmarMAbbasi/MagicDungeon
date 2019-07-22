@@ -21,8 +21,53 @@
   background-position: center center;
   padding: 75px;
 }
+.start-room {
+  background-image: url("../assets/rooms/special-rooms/start.png");
+}
 .boss-room {
   background-image: url("../assets/rooms/special-rooms/boss.png");
+}
+.cornerNE {
+  background-image: url("../assets/rooms/basic/cornerNE.png");
+}
+.cornerNW {
+  background-image: url("../assets/rooms/basic/cornerNW.png");
+}
+.cornerSE {
+  background-image: url("../assets/rooms/basic/cornerSE.png");
+}
+.cornerSW {
+  background-image: url("../assets/rooms/basic/cornerSW.png");
+}
+.eastDeadend {
+  background-image: url("../assets/rooms/basic/eastDeadend.png");
+}
+.eastWall {
+  background-image: url("../assets/rooms/basic/eastWall.png");
+}
+.horizontalHallway {
+  background-image: url("../assets/rooms/basic/horizontalHallway.png");
+}
+.northDeadend {
+  background-image: url("../assets/rooms/basic/northDeadend.png");
+}
+.northWall {
+  background-image: url("../assets/rooms/basic/northWall.png");
+}
+.southDeadend {
+  background-image: url("../assets/rooms/basic/southDeadend.png");
+}
+.southWall {
+  background-image: url("../assets/rooms/basic/southWall.png");
+}
+.verticalHallway {
+  background-image: url("../assets/rooms/basic/verticalHallway.png");
+}
+.westDeadend {
+  background-image: url("../assets/rooms/basic/westDeadend.png");
+}
+.westWall {
+  background-image: url("../assets/rooms/basic/westWall.png");
 }
 .static-room {
   width: 950px;
