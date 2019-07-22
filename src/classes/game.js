@@ -58,7 +58,6 @@ export default class Game {
 	}
 
 	setCharPos(row, col) {
-		debugger;
 		this.charPos.square.classList.remove(...this.charPos.square.classList);
 		this.charPos = {
 			square: this.grid[row][col],
@@ -98,7 +97,6 @@ export default class Game {
 			default:
 				break;
 		}
-		debugger;
 		let view = this.view;
 		setTimeout(() => {
 			view.classList.remove(...view.classList);
