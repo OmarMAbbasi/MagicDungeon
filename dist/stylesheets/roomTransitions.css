@@ -55,9 +55,9 @@
   }
 }
 .puff-out-center {
-  animation: puff-in-center 0.7s 1s both reverse;
+  animation: puff-out-center 0.7s 1s both reverse;
 }
-@keyframes puff-in-center {
+@keyframes puff-out-center {
   0% {
     transform: scale(2);
     filter: blur(2px);

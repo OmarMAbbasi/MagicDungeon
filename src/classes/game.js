@@ -1,4 +1,4 @@
-import { throttle, debounce } from "lodash";
+import { throttle, debounce, random, delay } from "lodash";
 import Floor from "./floor";
 import Room from "./rooms/room";
 
@@ -19,7 +19,7 @@ let TRANSITIONS_OUT = [
 ];
 
 export default class Game {
-	constructor(grid, floor) {
+	constructor({ grid, view }, floor) {
 		this.grid = grid;
 		this.floor = new Floor(6);
 
@@ -34,6 +34,12 @@ export default class Game {
 			left: false
 		};
 
+		// view = document.getElementsByClassName("room-holder");
+
+		// this.view.className = "room-holder";
+		// this.view.classList.toggle("start-room");
+		this.view = view;
+		this.view.classList.add("start");
 		this.charPos = {
 			square: this.grid[12][11],
 			row: 12,
@@ -51,9 +57,61 @@ export default class Game {
 		//!!Floor Management
 	}
 
-	nextRoom(room) {
-		this.floor.setCurrentRoom(room);
+	setCharPos(row, col) {
 		debugger;
+		this.charPos.square.classList.remove(...this.charPos.square.classList);
+		this.charPos = {
+			square: this.grid[row][col],
+			row: row,
+			col: col
+		};
+		this.grid[row][col].className = "wiz";
+		this.grid[row][col].classList.add("idle-right");
+	}
+
+	nextRoom(room, type) {
+		let newRoom;
+
+		let out = TRANSITIONS_OUT[_.random(5)];
+		let back = TRANSITIONS_IN[_.random(5)];
+		this.view.classList.add(out);
+		switch (type) {
+			case "north":
+				newRoom = room.north;
+				this.setCharPos(12, 21);
+				break;
+			case "south":
+				newRoom = room.south;
+				this.setCharPos(12, 2);
+
+				break;
+			case "east":
+				newRoom = room.east;
+				this.setCharPos(12, 21);
+
+				break;
+			case "west":
+				newRoom = room.west;
+				this.setCharPos(12, 2);
+
+				break;
+			default:
+				break;
+		}
+		debugger;
+		let view = this.view;
+		setTimeout(() => {
+			view.classList.remove(...view.classList);
+			view.classList.add("room-holder");
+			if (newRoom.type === "boss" || newRoom.type === "start") {
+				view.classList.add(newRoom.type);
+			} else {
+				view.classList.add(newRoom.layout);
+			}
+			view.classList.add(back);
+		}, 1200);
+
+		this.floor.setCurrentRoom(newRoom);
 	}
 
 	checkNorthDoor(row, col, shift) {
@@ -64,7 +122,7 @@ export default class Game {
 			(col === 12 || col === 11)
 		) {
 			if (row === 0) {
-				this.nextRoom(this.floor.currentRoom);
+				this.nextRoom(this.floor.currentRoom, "north");
 			} else {
 				shift--;
 			}
@@ -79,7 +137,7 @@ export default class Game {
 			(col === 12 || col === 11)
 		) {
 			if (row === 23) {
-				this.nextRoom(this.floor.currentRoom);
+				this.nextRoom(this.floor.currentRoom, "south");
 			} else {
 				shift++;
 			}
@@ -94,7 +152,7 @@ export default class Game {
 			(row === 12 || row === 11)
 		) {
 			if (col === 23) {
-				this.nextRoom(this.floor.currentRoom);
+				this.nextRoom(this.floor.currentRoom, "east");
 			} else {
 				shift++;
 			}
@@ -110,7 +168,7 @@ export default class Game {
 			(row === 12 || row === 11)
 		) {
 			if (col === 0) {
-				this.nextRoom(this.floor.currentRoom);
+				this.nextRoom(this.floor.currentRoom, "west");
 			} else {
 				shift--;
 			}

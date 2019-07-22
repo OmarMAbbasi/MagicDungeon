@@ -24,11 +24,11 @@
 	// flex: 1 0 32px;
 }
 
-.start-room {
+.start {
 	background-image: url("../assets/rooms/special-rooms/start.png");
 }
 
-.boss-room {
+.boss {
 	background-image: url("../assets/rooms/special-rooms/boss.png");
 }
 
@@ -114,4 +114,167 @@
 .floor {
 	min-width: 32px;
 	min-height: 32px;
+}
+
+//!!Out
+.scale-out-top {
+	animation: scale-out-top 1s both;
+
+	@keyframes scale-out-top {
+		0% {
+			transform: scale(1);
+			transform-origin: 50% 0%;
+			opacity: 1;
+		}
+		100% {
+			transform: scale(0);
+			transform-origin: 50% 0%;
+			opacity: 1;
+		}
+	}
+}
+
+.rotate-out-center {
+	animation: rotate-out-center 0.6s both reverse;
+}
+
+@keyframes rotate-out-center {
+	0% {
+		transform: rotate(-360deg);
+		opacity: 0;
+	}
+	100% {
+		transform: rotate(0);
+		opacity: 1;
+	}
+}
+
+.roll-out-blurred {
+	animation: roll-in-blurred-left 1s both reverse;
+
+	@keyframes roll-in-blurred-left {
+		0% {
+			transform: translateX(-1000px) rotate(-720deg);
+			filter: blur(50px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0) rotate(0deg);
+			filter: blur(0);
+			opacity: 1;
+		}
+	}
+}
+
+.swirl-out-fwd {
+	animation: swirl-out-fwd 1s ease-out both reverse;
+
+	@keyframes swirl-out-fwd {
+		0% {
+			transform: rotate(-540deg) scale(0);
+			opacity: 0;
+		}
+		100% {
+			transform: rotate(0) scale(1);
+			opacity: 1;
+		}
+	}
+}
+
+.puff-out-center {
+	animation: puff-out-center 0.7s both reverse;
+
+	@keyframes puff-out-center {
+		0% {
+			transform: scale(2);
+			filter: blur(2px);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(1);
+			filter: blur(0px);
+			opacity: 1;
+		}
+	}
+}
+
+//!!In
+.scale-in-top {
+	animation: scale-in-top 1s both reverse;
+
+	@keyframes scale-in-top {
+		0% {
+			transform: scale(1);
+			transform-origin: 50% 0%;
+			opacity: 1;
+		}
+		100% {
+			transform: scale(0);
+			transform-origin: 50% 0%;
+			opacity: 1;
+		}
+	}
+}
+
+.rotate-in-center {
+	animation: rotate-in-center 0.6s both;
+	@keyframes rotate-in-center {
+		0% {
+			transform: rotate(-360deg);
+			opacity: 0;
+		}
+		100% {
+			transform: rotate(0);
+			opacity: 1;
+		}
+	}
+}
+
+.roll-in-blurred-left {
+	animation: roll-in-blurred-left 1s both;
+
+	@keyframes roll-in-blurred-left {
+		0% {
+			transform: translateX(-1000px) rotate(-720deg);
+			filter: blur(50px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0) rotate(0deg);
+			filter: blur(0);
+			opacity: 1;
+		}
+	}
+}
+
+.swirl-in-fwd {
+	animation: swirl-in-fwd 1s ease-out both;
+
+	@keyframes swirl-in-fwd {
+		0% {
+			transform: rotate(-540deg) scale(0);
+			opacity: 0;
+		}
+		100% {
+			transform: rotate(0) scale(1);
+			opacity: 1;
+		}
+	}
+}
+
+.puff-in-center {
+	animation: puff-in-center 0.7s both;
+
+	@keyframes puff-in-center {
+		0% {
+			transform: scale(2);
+			filter: blur(2px);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(1);
+			filter: blur(0px);
+			opacity: 1;
+		}
+	}
 }

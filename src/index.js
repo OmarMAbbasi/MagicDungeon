@@ -5,9 +5,8 @@ import Floor from "./classes/floor";
 import Game from "./classes/game.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-	let grid = newGame();
-	// document.body.appendChild(grid);
-	new Game(grid);
+	let game = newGame();
+	new Game(game);
 });
 
 function newGame() {
@@ -41,8 +40,10 @@ function newGame() {
 			col.appendChild(box);
 			currRow.push(box);
 		}
+
 		gameBoard.push(currRow);
 	}
+	let game = { grid: gameBoard, view: holder };
 
 	// debugger;
 
@@ -50,5 +51,5 @@ function newGame() {
 
 	document.body.appendChild(gameBox);
 
-	return gameBoard;
+	return game;
 }
