@@ -14,58 +14,25 @@ export default class Game {
 			left: false
 		};
 
-		this.grid[5][6].className = "wiz";
-		this.grid[5][6].classList.add("idle-right");
 		this.charPos = {
-			square: this.grid[5][5],
-			row: 5,
-			col: 5
+			square: this.grid[12][12],
+			row: 12,
+			col: 12
 		};
 		this.facing = "right";
 
-		// this.grid[5][5].className = "wiz";
-		// this.grid[5][5].classList.add("idle-left");
-
-		// this.grid[5][7].className = "wiz";
-		// this.grid[5][7].classList.add("right");
-
-		// this.grid[5][4].className = "wiz";
-		// this.grid[5][4].classList.add("left");
-
-		// this.grid[6][6].className = "wiz";
-		// this.grid[6][6].classList.add("down");
-
-		// this.grid[4][6].className = "wiz";
-		// this.grid[4][6].classList.add("up");
-
-		// this.grid[4][7].className = "wiz";
-		// this.grid[4][7].classList.add("up-right");
-
-		// this.grid[4][4].className = "wiz";
-		// this.grid[4][4].classList.add("up-left");
-
-		// this.grid[6][7].className = "wiz";
-		// this.grid[6][7].classList.add("down-right");
-
-		// this.grid[6][4].className = "wiz";
-		// this.grid[6][4].classList.add("down-left");
-
-		// this.grid[4][4].className = "wiz";
-		// this.grid[4][4].classList.add("down-left");
+		this.grid[12][12].className = "wiz";
+		this.grid[12][12].classList.add("idle-right");
 
 		this.throttledMove = _.throttle(this.move, 750);
 
-		// this.throttledMoveUp = _.throttle(this.moveUp, 750);
-		// this.throttledMoveDown = _.throttle(this.moveDown, 750);
-		// this.throttledMoveLeft = _.throttle(this.moveLeft, 750);
-		// this.throttledMoveRight = _.throttle(this.moveRight, 750);
 		this.bouncedIdle = _.debounce(this.idle, 750);
-		// this.throtRight = _.throttle(this.walkRight, 750);
 
-		// this.start();
 	}
 
 	start() {
+		debugger;
+		// this.charPos.square.clasList.remove("idle-right");
 		requestAnimationFrame(this.throttledMove.bind(this));
 	}
 
@@ -104,9 +71,9 @@ export default class Game {
 		} else if (pCol > col) {
 			this.moveLeft(next, prev);
 		} else {
-			square.classList.remove(...square.classList);
-			square.classList.add("wiz");
-			square.classList.add("idle-" + this.facing);
+			prev.classList.remove(...prev.classList);
+			prev.classList.add("wiz");
+			prev.classList.add("idle-" + this.facing);
 		}
 		Object.assign(this.charPos, { square: next, row: row, col: col });
 	}
