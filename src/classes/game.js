@@ -50,9 +50,9 @@ export default class Game {
 		this.grid[12][11].className = "wiz";
 		this.grid[12][11].classList.add("idle-right");
 
-		this.throttledMove = _.throttle(this.move, 750);
+		this.throttledMove = _.throttle(this.move, 751);
 
-		this.bouncedIdle = _.debounce(this.idle, 750);
+		this.bouncedIdle = _.debounce(this.idle, 751);
 
 		//!!Floor Management
 	}
