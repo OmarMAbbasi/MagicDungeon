@@ -12,6 +12,7 @@
 .idle-left {
 	animation: idle-left 0.5s steps(4, start) infinite both;
 }
+
 .right {
 	animation: right 0.75s steps(4, start) infinite both;
 }
@@ -20,12 +21,75 @@
 	animation: left 0.75s steps(4, start) infinite both;
 }
 
-.down {
-	animation: right 0.75s steps(4, start) infinite both;
+.up {
+	animation: up 0.75s steps(4, start) infinite both;
 }
 
-.up {
-	animation: left 0.75s steps(4, start) infinite both;
+.down {
+	animation: down 0.75s steps(4, start) infinite both;
+}
+
+.up-right {
+	animation: up-right 0.75s steps(4, start) infinite both;
+}
+
+@keyframes idle-left {
+	from {
+		background-position: top -132px right 128px;
+	}
+	to {
+		background-position: top -132px right 192px;
+	}
+	0% {
+		transform: translateX(0px) scale(-1.5, 1.5);
+	}
+	100% {
+		transform: translateX(0px) scale(-1.5, 1.5);
+	}
+}
+
+@keyframes idle-right {
+	from {
+		background-position: top -132px right 128px;
+	}
+	to {
+		background-position: top -132px right 192px;
+	}
+	0% {
+		transform: translateX(0px) scale(1.5);
+	}
+	100% {
+		transform: translateX(0px) scale(1.5);
+	}
+}
+
+@keyframes up {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	from {
+		transform: translateY(32px) scale(1.5);
+	}
+	to {
+		transform: translateY(0px) scale(1.5);
+	}
+}
+@keyframes down {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	from {
+		transform: translateY(-32px) scale(1.5);
+	}
+	to {
+		transform: translateY(0px) scale(1.5);
+	}
 }
 
 @keyframes right {
@@ -37,11 +101,9 @@
 	}
 	0% {
 		transform: translateX(-32px) scale(1.5);
-		opacity: 1;
 	}
 	100% {
 		transform: translateX(0px) scale(1.5);
-		opacity: 1;
 	}
 }
 
@@ -55,85 +117,79 @@
 	}
 	0% {
 		transform: translateX(32px) scale(-1.5, 1.5);
-		opacity: 1;
 	}
 	100% {
 		transform: translateX(0px) scale(-1.5, 1.5);
-		opacity: 1;
 	}
 }
 
-@keyframes idle-right {
+@keyframes up-right {
 	from {
-		background-position: top -132px right 128px;
-	}
-	to {
 		background-position: top -132px right 192px;
 	}
-	0% {
-		transform: translateX(0px) scale(1.5);
-		opacity: 1;
+	to {
+		background-position: top -132px right 256px;
 	}
-	100% {
-		transform: translateX(0px) scale(1.5);
-		opacity: 1;
-	}
-}
-
-@keyframes idle-left {
 	from {
-		background-position: top -132px right 128px;
+		transform: translate(-32px, 32px) scale(1.5);
 	}
 	to {
-		background-position: top -132px right 192px;
-	}
-	0% {
-		transform: translateX(0px) scale(-1.5, 1.5);
-		opacity: 1;
-	}
-	100% {
-		transform: translateX(0px) scale(-1.5, 1.5);
-		opacity: 1;
+		transform: translate(0px, 0px) scale(1.5);
 	}
 }
 
-// .slide-out-left {
-// 	width: 16px;
-// 	height: 28px;
-// 	animation: slide-out-left 0.5s steps(4, end) infinite both;
-// 	/* animation: slide-left 0.5s steps(4) infinite both; */
-// 	// background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
-// }
-// @keyframes slide-out-left {
-// 	from {
-// 		background-position: top -132px left -128px;
-// 	}
-// 	to {
-// 		background-position: top -132px left -192px;
-// 	}
-// 	0% {
-// 		transform: translateX(0) scale(-1.5, 1.5);
-// 		opacity: 1;
-// 	}
-// 	100% {
-// 		transform: translateX(64px) scale(-1.5, 1.5);
-// 		opacity: 1;
-// 	}
-// }
+.up-left {
+	animation: up-left 0.75s steps(4, start) infinite both;
+}
 
-// .slide-left {
-// 	width: 16px;
-// 	height: 28px;
-// 	animation: slide-left 0.5s steps(4, end) infinite both;
-// 	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
-// 	transform: scale(-2.5, 2.5);
-// 	display: inline-block;
-// }
-// @keyframes slide-left {
-// 	from {
-// 		background-position: top -132px left -128px;
-// 	}
-// 	to {
-// 		background-position: top -132px left -192px;
-// 	}
-// }
+@keyframes up-left {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	from {
+		transform: translate(32px, 32px) scale(-1.5, 1.5);
+	}
+	to {
+		transform: translate(0px, 0px) scale(-1.5, 1.5);
+	}
+}
+
+.down-left {
+	animation: down-left 0.75s steps(4, start) infinite both;
+}
+
+@keyframes down-left {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	from {
+		transform: translate(32px, -32px) scale(-1.5, 1.5);
+	}
+	to {
+		transform: translate(0px, 0px) scale(-1.5, 1.5);
+	}
+}
+.down-right {
+	animation: down-right 0.75s steps(4, start) infinite both;
+}
+
+@keyframes down-right {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	from {
+		transform: translate(-32px, -32px) scale(1.5);
+	}
+	to {
+		transform: translate(0px, 0px) scale(1.5);
+	}
+}

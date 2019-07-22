@@ -5,155 +5,156 @@ export default class Game {
 	constructor(grid, floor) {
 		this.grid = grid;
 		this.floor = new Floor(6);
+		this.bindKeys = this.bindKeys.bind(this);
 		this.bindKeys();
-		this.charPos = {
-			square: this.grid[1][1],
-			row: 1,
-			col: 1
-		};
 		this.keys = {
 			up: false,
 			down: false,
 			right: false,
 			left: false
 		};
-		this.lastKey = "right";
-		this.grid[1][1].className = "wiz";
-		this.grid[1][1].classList.add("idle-right");
 
-		this.grid[10][10].classList.add("wiz");
-		this.grid[10][10].classList.add("left");
-		this.grid[10][10].classList.add("idle-left");
+		this.grid[5][6].className = "wiz";
+		this.grid[5][6].classList.add("idle-right");
+		this.charPos = {
+			square: this.grid[5][5],
+			row: 5,
+			col: 5
+		};
+		this.facing = "right";
 
-		// this.walkRight = this.walkRight.bind(this);
+		this.grid[5][5].className = "wiz";
+		this.grid[5][5].classList.add("idle-left");
 
-		this.row = 0;
-		this.col = 0;
-		this.prev;
+		this.grid[5][7].className = "wiz";
+		this.grid[5][7].classList.add("right");
+
+		this.grid[5][4].className = "wiz";
+		this.grid[5][4].classList.add("left");
+
+		this.grid[6][6].className = "wiz";
+		this.grid[6][6].classList.add("down");
+
+		this.grid[4][6].className = "wiz";
+		this.grid[4][6].classList.add("up");
+
+		this.grid[4][7].className = "wiz";
+		this.grid[4][7].classList.add("up-right");
+
+		this.grid[4][4].className = "wiz";
+		this.grid[4][4].classList.add("up-left");
+
+		this.grid[6][7].className = "wiz";
+		this.grid[6][7].classList.add("down-right");
+
+		this.grid[6][4].className = "wiz";
+		this.grid[6][4].classList.add("down-left");
+
+		// this.grid[4][4].className = "wiz";
+		// this.grid[4][4].classList.add("down-left");
+
+		this.throttledMove = _.throttle(this.move, 750);
+
+		// this.throttledMoveUp = _.throttle(this.moveUp, 750);
+		// this.throttledMoveDown = _.throttle(this.moveDown, 750);
+		// this.throttledMoveLeft = _.throttle(this.moveLeft, 750);
+		// this.throttledMoveRight = _.throttle(this.moveRight, 750);
+		this.bouncedIdle = _.debounce(this.idle, 750);
 		// this.throtRight = _.throttle(this.walkRight, 750);
-		this.resetHor = this.debHor.bind(this);
-		this.resetVert = this.debHor.bind(this);
 
-		// this.resetHor = _.debounce(this.debHor, 750);
-		// this.resetVert = _.debounce(this.debHor, 750);
-		this.throttledMoveRight = _.throttle(this.throttledMoveRight, 750);
-		this.throttledMoveLeft = _.throttle(this.throttledMoveLeft, 750);
-		this.throttledMoveDown = _.throttle(this.throttledMoveDown, 750);
-		this.throttledMoveUp = _.throttle(this.throttledMoveUp, 750);
-		this.bounce = _.throttle(this.debtest, 750);
-		this.idle = _.debounce(this.resetAnimation, 750);
-		// this.throtRight = _.throttle(this.walkRight, 750);
+		// this.start();
 	}
 
-	throttledMoveRight() {
-		this.keys.right = true;
-
-		if (this.col !== 1) {
-			this.col = 1;
-		}
-		this.bounce();
+	start() {
+		requestAnimationFrame(this.throttledMove.bind(this));
 	}
 
-	throttledMoveLeft() {
-		this.keys.left = true;
-
-		if (this.col !== -1) {
-			this.col = -1;
-		}
-		this.bounce();
-	}
-
-	throttledMoveDown() {
-		this.keys.down = true;
-
-		if (this.row !== 1) {
-			this.row = 1;
-		}
-		this.bounce();
-	}
-
-	throttledMoveUp() {
-		this.keys.up = true;
-
-		if (this.row !== -1) {
-			this.row = -1;
-		}
-		this.bounce();
-	}
-
-	resetAnimation() {
-		let [square, row, col] = Object.values(this.charPos);
-		if (this.lastKey === "left") {
-			square.classList.remove(...square.classList);
-			square.classList.add("wiz");
-			square.classList.add("idle-left");
-		} else if (this.lastKey === "right") {
-			square.classList.remove(...square.classList);
-			square.classList.add("wiz");
-			square.classList.add("idle-right");
-		}
-	}
-	// debtest() {
-	// 	let [square, row, col] = Object.values(this.charPos);
-	// 	let pRow = row;
-	// 	let pCol = col;
-	// 	row += this.row;
-	// 	col += this.col;
-	// 	let next = this.grid[row][col];
-	// 	let prev = this.charPos.square;
-	// 	next.classList.add("wiz");
-	// 	if (pCol < col) {
-	// 		next.classList.add("right");
-	// 	} else if (pCol > col) {
-	// 		next.classList.add("left");
-	// 	}
-	// 	prev.className = "square";
-	// 	this.idle();
-	// 	Object.assign(this.charPos, { row: row, col: col, square: next });
-	// }
-
-	debHor(key) {
-		if (key === "left") {
-			this.lastKey = "left";
-			this.lastKey = "left";
-		}
-		if (key === "right") {
-			this.lastKey = "right";
-		}
-		this.col = 0;
-	}
-
-	debVert(key) {
-		this.row = 0;
-	}
-
-	debtest() {
-		debugger;
-		this.idle();
-		let [square, row, col] = Object.values(this.charPos);
+	move() {
+		this.bouncedIdle();
+		let { square, row, col } = this.charPos;
+		let prev = square;
 		let pRow = row;
 		let pCol = col;
-		row += this.row;
-		col += this.col;
-		let next = this.grid[row][col];
-		let prev = this.charPos.square;
-		prev.classList.remove(...prev.classList);
-
-		if (pCol < col) {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-			next.classList.add("right");
-		} else if (pCol > col) {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-			next.classList.add("left");
-		} else {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-
-			next.classList.add("right");
+		let hShift = 0;
+		let vShift = 0;
+		let currClass = "";
+		if (this.keys.up) {
+			vShift--;
 		}
-		Object.assign(this.charPos, { row: row, col: col, square: next });
+		if (this.keys.down) {
+			vShift++;
+		}
+		if (this.keys.left) {
+			hShift--;
+		}
+		if (this.keys.right) {
+			hShift++;
+		}
+		row += vShift;
+		col += hShift;
+		let next = this.grid[row][col];
+		prev.classList.remove(...prev.classList);
+		// next.className = "wiz";
+		if (row > pRow) {
+			this.moveDown(next, prev);
+		} else if (pRow > row) {
+			this.moveUp(next, prev);
+		} else if (col > pCol) {
+			this.moveRight(next, prev);
+		} else if (pCol > col) {
+			this.moveLeft(next, prev);
+		} else {
+			square.classList.remove(...square.classList);
+			square.classList.add("wiz");
+			square.classList.add("idle-" + this.facing);
+		}
+		Object.assign(this.charPos, { square: next, row: row, col: col });
+	}
+
+	idle() {
+		let { square, row, col } = this.charPos;
+		square.classList.remove(...square.classList);
+		square.classList.add("wiz");
+		square.classList.add("idle-" + this.facing);
+	}
+
+	moveUp(next, prev) {
+		let { square, row, col } = this.charPos;
+		let currClass = "up";
+		if (this.keys.right) {
+			debugger;
+			currClass += "-right";
+		} else if (this.keys.left) {
+			currClass += "-left";
+		}
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add(currClass);
+	}
+
+	moveDown(next, prev) {
+		let { square, row, col } = this.charPos;
+		let currClass = "down";
+		if (this.keys.right) {
+			currClass += "-right";
+		} else if (this.keys.left) {
+			currClass += "-left";
+		}
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add(currClass);
+	}
+	moveLeft(next, prev) {
+		let { square, row, col } = this.charPos;
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add("left");
+	}
+	moveRight(next, prev) {
+		let { square, row, col } = this.charPos;
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add("right");
 	}
 
 	bindKeys() {
@@ -162,50 +163,60 @@ export default class Game {
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					this.throttledMoveUp();
+					this.keys.up = true;
+					this.throttledMove();
 					break;
 				case 83: // S
 				case 40:
-					this.throttledMoveDown();
+					this.keys.down = true;
+					this.throttledMove();
 					break;
 				case 65: // A
 				case 37:
-					this.throttledMoveLeft();
+					this.facing = "left";
+					this.keys.left = true;
+
+					this.throttledMove();
 					break;
 				case 68: // D
 				case 39:
-					this.throttledMoveRight();
+					this.facing = "right";
+
+					this.keys.right = true;
+
+					this.throttledMove();
 					break;
 				default:
 					break;
 			}
 		});
+
 		document.addEventListener("keyup", e => {
 			// console.log(e.keyCode);
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					this.bounce.cancel();
-					this.resetVert();
+					// this.bouncedIdle();
 
+					this.keys.up = false;
 					break;
 				case 83: // S
 				case 40:
-					this.bounce.cancel();
-					this.resetVert();
+					// this.bouncedIdle();
 
+					this.keys.down = false;
 					break;
 				case 65: // A
 				case 37:
-					this.bounce.cancel();
-					this.resetHor("left");
+					// this.bouncedIdle();
 
+					this.keys.left = false;
 					break;
 				case 68: // D
 				case 39:
-					this.bounce.cancel();
-					this.resetHor("right");
+					// this.bouncedIdle();
 
+					this.keys.right = false;
 					break;
 				default:
 					break;
