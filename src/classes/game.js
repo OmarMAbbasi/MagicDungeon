@@ -17,14 +17,14 @@ export default class Game {
 			right: false,
 			left: false
 		};
-		this.grid[1][1].className = "wizzard_f_idle_anim";
+		this.grid[1][1].className = "wiz";
 		// this.walkRight = this.walkRight.bind(this);
 
 		this.row = 0;
 		this.col = 0;
 		this.prev;
 		// this.throtRight = _.throttle(this.walkRight, 750);
-		this.resetHor = _.debounce(this.debHor, 0, 0, 750);
+		this.resetHor = _.debounce(this.debHor, 750);
 		this.resetVert = _.debounce(this.debVert, 750);
 		this.throttledMoveRight = _.throttle(this.throttledMoveRight, 750);
 		this.throttledMoveLeft = _.throttle(this.throttledMoveLeft, 750);
@@ -36,87 +36,112 @@ export default class Game {
 	}
 
 	throttledMoveRight() {
-		if (this.row !== 1) {
-			this.row = 1;
-		}
-	}
+		this.keys.right = true;
 
-	throttledMoveLeft() {
-		if (this.row !== -1) {
-			this.row = -1;
-		}
-	}
-
-	throttledMoveDown() {
 		if (this.col !== 1) {
 			this.col = 1;
 		}
 	}
 
-	throttledMoveUp() {
+	throttledMoveLeft() {
+		this.keys.left = true;
+
 		if (this.col !== -1) {
 			this.col = -1;
 		}
 	}
 
-	debHor() {
-		if (this.keys.left && this.keys.right) {
-			this.col = 0;
+	throttledMoveDown() {
+		this.keys.down = true;
+
+		if (this.row !== 1) {
+			this.row = 1;
 		}
 	}
 
-	debVert() {
-		if (this.keys.up && this.keys.down) {
-			this.row = 0;
+	throttledMoveUp() {
+		this.keys.up = true;
+
+		if (this.row !== -1) {
+			this.row = -1;
 		}
 	}
 
 	resetAnimation() {
 		let [square, row, col] = Object.values(this.charPos);
-		this.charPos.square.className = "wizzard_f_idle_anim";
+		this.charPos.square.className = "wiz";
+	}
+	// debtest() {
+	// 	let [square, row, col] = Object.values(this.charPos);
+	// 	let pRow = row;
+	// 	let pCol = col;
+	// 	row += this.row;
+	// 	col += this.col;
+	// 	let next = this.grid[row][col];
+	// 	let prev = this.charPos.square;
+	// 	next.classList.add("wiz");
+	// 	if (pCol < col) {
+	// 		next.classList.add("right");
+	// 	} else if (pCol > col) {
+	// 		next.classList.add("left");
+	// 	}
+	// 	prev.className = "square";
+	// 	this.idle();
+	// 	Object.assign(this.charPos, { row: row, col: col, square: next });
+	// }
+
+	debHor(key) {
+		this.col = 0;
+	}
+
+	debVert(key) {
+		this.row = 0;
 	}
 
 	debtest() {
 		let [square, row, col] = Object.values(this.charPos);
+		let pRow = row;
+		let pCol = col;
 		row += this.row;
 		col += this.col;
-		let next = this.grid[col][row];
+		let next = this.grid[row][col];
 		let prev = this.charPos.square;
-		this.charPos.square.className = "slide-out-right";
-		setTimeout(() => {
-			prev.className = "square";
-		}, 750);
+
+		next.classList.add("wiz");
+		if (pCol < col) {
+			next.classList.add("right");
+		} else if (pCol > col) {
+			next.classList.add("left");
+		}
+		prev.className = "square";
 		this.idle();
 		Object.assign(this.charPos, { row: row, col: col, square: next });
 	}
 
 	bindKeys() {
 		document.addEventListener("keydown", e => {
+			debugger;
+
 			// console.log(e.keyCode);
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					this.keys.up = true;
 					this.throttledMoveUp();
 					this.bounce();
 					break;
 				case 83: // S
 				case 40:
-					this.keys.down = true;
 					this.throttledMoveDown();
 					this.bounce();
 					break;
 				case 65: // A
 				case 37:
-					this.keys.left = true;
 					this.throttledMoveLeft();
 					this.bounce();
 					break;
 				case 68: // D
 				case 39:
-					this.keys.right = true;
 					this.throttledMoveRight();
-
 					this.bounce();
 					break;
 				default:
@@ -124,31 +149,25 @@ export default class Game {
 			}
 		});
 		document.addEventListener("keyup", e => {
+			debugger;
 			// console.log(e.keyCode);
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					debugger;
-					this.keys.up = false;
 					this.resetVert();
 
 					break;
 				case 83: // S
 				case 40:
-					debugger;
-					this.keys.down = false;
 					this.resetVert();
+
 					break;
 				case 65: // A
 				case 37:
-					debugger;
-					this.keys.left = false;
 					this.resetHor();
 					break;
 				case 68: // D
 				case 39:
-					debugger;
-					this.keys.right = false;
 					this.resetHor();
 					break;
 				default:

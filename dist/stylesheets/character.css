@@ -1,69 +1,65 @@
-.slide-out-right {
-  width: 16px;
-  height: 28px;
-  animation: slide-out-right 0.75s steps(4, start) infinite both;
-  /* animation: slide-right 0.5s steps(4) infinite both; */
-  background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+.wiz {
+	width: 16px;
+	height: 28px;
+	animation: idle 0.5s steps(4, start) infinite both;
+	/* 
+	animation: slide-right 0.5s steps(4) infinite both; */
+	background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
 }
-@keyframes slide-out-right {
-  from {
-    background-position: top -132px right 192px;
-  }
-  to {
-    background-position: top -132px right 256px;
-  }
-  0% {
-    transform: translateX(0px) scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(32px) scale(1.5);
-    opacity: 1;
-  }
+.right {
+	animation: slide-in-right 0.75s steps(4, start) infinite both;
 }
-.slide-out-right {
-  width: 16px;
-  height: 28px;
-  animation: slide-out-right 0.75s steps(4, start) infinite both;
-  /* animation: slide-right 0.5s steps(4) infinite both; */
-  background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+.left {
+	animation: slide-in-left 0.75s steps(4, start) infinite both;
 }
-@keyframes slide-out-right {
-  from {
-    background-position: top -132px right 192px;
-  }
-  to {
-    background-position: top -132px right 256px;
-  }
-  0% {
-    transform: translateX(0px) scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(32px) scale(1.5);
-    opacity: 1;
-  }
+.idle {
+	animation: idle 0.5s steps(4, start) infinite both;
 }
-.wizzard_f_idle_anim {
-  width: 16px;
-  height: 28px;
-  animation: wizzard_f_idle_anim 0.5s steps(4, start) infinite both;
-  /* animation: slide-right 0.5s steps(4) infinite both; */
-  background-image: url("../assets/0x72_DungeonTilesetII_v1.2.png");
+@keyframes slide-in-right {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	0% {
+		transform: translateX(-32px) scale(1.5);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
 }
-@keyframes wizzard_f_idle_anim {
-  from {
-    background-position: top -132px right 128px;
-  }
-  to {
-    background-position: top -132px right 192px;
-  }
-  0% {
-    transform: translateX(0px) scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0px) scale(1.5);
-    opacity: 1;
-  }
+@keyframes slide-in-left {
+	from {
+		background-position: top -132px right 192px;
+	}
+	to {
+		background-position: top -132px right 256px;
+	}
+	0% {
+		transform: translateX(-32px) scale(1.5);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
+}
+@keyframes idle {
+	from {
+		background-position: top -132px right 128px;
+	}
+	to {
+		background-position: top -132px right 192px;
+	}
+	0% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(0px) scale(1.5);
+		opacity: 1;
+	}
 }
