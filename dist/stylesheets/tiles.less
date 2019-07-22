@@ -9,17 +9,17 @@
 		justify-content: center;
 		flex: 1 0 auto;
 		.generate-columns(24);
-
-		.generate-columns(@n, @i: 1) when (@i =< @n) {
-			.col-@{i} {
-				min-width: 34px;
-				min-height: 34px;
-				display: flex;
-				align-items: flex-start;
-				justify-content: center;
-			}
-			.generate-columns(@n, (@i + 1));
-		}
 	}
 	.generate-rows(@n, (@i + 1));
+}
+
+.generate-columns(@n, @i: 1) when (@i =< @n) {
+	.col-@{i} {
+		min-width: 34px;
+		min-height: 34px;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+	}
+	.generate-columns(@n, (@i + 1));
 }
