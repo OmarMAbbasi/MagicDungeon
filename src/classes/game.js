@@ -5,6 +5,9 @@ export default class Game {
 	constructor(grid, floor) {
 		this.grid = grid;
 		this.floor = new Floor(6);
+
+		//!!Player Management
+		//TODO Move logic to player class after building spells
 		this.bindKeys = this.bindKeys.bind(this);
 		this.bindKeys();
 		this.keys = {
@@ -28,12 +31,8 @@ export default class Game {
 
 		this.bouncedIdle = _.debounce(this.idle, 750);
 
-	}
-
-	start() {
+		//!!Floor Management
 		debugger;
-		// this.charPos.square.clasList.remove("idle-right");
-		requestAnimationFrame(this.throttledMove.bind(this));
 	}
 
 	move() {
@@ -44,17 +43,16 @@ export default class Game {
 		let pCol = col;
 		let hShift = 0;
 		let vShift = 0;
-		let currClass = "";
-		if (this.keys.up) {
+		if (this.keys.up && row > 1) {
 			vShift--;
 		}
-		if (this.keys.down) {
+		if (this.keys.down && row < 22) {
 			vShift++;
 		}
-		if (this.keys.left) {
+		if (this.keys.left && col > 1) {
 			hShift--;
 		}
-		if (this.keys.right) {
+		if (this.keys.right && col < 22) {
 			hShift++;
 		}
 		row += vShift;
@@ -97,7 +95,6 @@ export default class Game {
 		next.className = "wiz";
 		next.classList.add(currClass);
 	}
-
 	moveDown(next, prev) {
 		let { square, row, col } = this.charPos;
 		let currClass = "down";

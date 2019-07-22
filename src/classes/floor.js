@@ -34,6 +34,10 @@ export default class Floor {
 				y: 0
 			}
 		};
+
+		this.currentRoom = this.startRoom;
+
+		//!Loops until a satisfactory maze has been built
 		let done = true;
 		while (done) {
 			done = true;
@@ -162,7 +166,6 @@ export default class Floor {
 	}
 
 	setEndpoints() {
-
 		let x = this.startRoom.cords.x;
 		let y = this.startRoom.cords.y;
 
