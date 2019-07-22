@@ -23,32 +23,32 @@ export default class Game {
 		};
 		this.facing = "right";
 
-		this.grid[5][5].className = "wiz";
-		this.grid[5][5].classList.add("idle-left");
+		// this.grid[5][5].className = "wiz";
+		// this.grid[5][5].classList.add("idle-left");
 
-		this.grid[5][7].className = "wiz";
-		this.grid[5][7].classList.add("right");
+		// this.grid[5][7].className = "wiz";
+		// this.grid[5][7].classList.add("right");
 
-		this.grid[5][4].className = "wiz";
-		this.grid[5][4].classList.add("left");
+		// this.grid[5][4].className = "wiz";
+		// this.grid[5][4].classList.add("left");
 
-		this.grid[6][6].className = "wiz";
-		this.grid[6][6].classList.add("down");
+		// this.grid[6][6].className = "wiz";
+		// this.grid[6][6].classList.add("down");
 
-		this.grid[4][6].className = "wiz";
-		this.grid[4][6].classList.add("up");
+		// this.grid[4][6].className = "wiz";
+		// this.grid[4][6].classList.add("up");
 
-		this.grid[4][7].className = "wiz";
-		this.grid[4][7].classList.add("up-right");
+		// this.grid[4][7].className = "wiz";
+		// this.grid[4][7].classList.add("up-right");
 
-		this.grid[4][4].className = "wiz";
-		this.grid[4][4].classList.add("up-left");
+		// this.grid[4][4].className = "wiz";
+		// this.grid[4][4].classList.add("up-left");
 
-		this.grid[6][7].className = "wiz";
-		this.grid[6][7].classList.add("down-right");
+		// this.grid[6][7].className = "wiz";
+		// this.grid[6][7].classList.add("down-right");
 
-		this.grid[6][4].className = "wiz";
-		this.grid[6][4].classList.add("down-left");
+		// this.grid[6][4].className = "wiz";
+		// this.grid[6][4].classList.add("down-left");
 
 		// this.grid[4][4].className = "wiz";
 		// this.grid[4][4].classList.add("down-left");
@@ -122,7 +122,6 @@ export default class Game {
 		let { square, row, col } = this.charPos;
 		let currClass = "up";
 		if (this.keys.right) {
-			debugger;
 			currClass += "-right";
 		} else if (this.keys.left) {
 			currClass += "-left";
