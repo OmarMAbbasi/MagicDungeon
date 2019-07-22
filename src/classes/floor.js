@@ -35,8 +35,6 @@ export default class Floor {
 			}
 		};
 
-		this.currentRoom = this.startRoom;
-
 		//!Loops until a satisfactory maze has been built
 		let done = true;
 		while (done) {
@@ -85,6 +83,8 @@ export default class Floor {
 				});
 			});
 		}
+
+		this.currentRoom = this.startRoom;
 		console.log(this.rooms);
 		console.log(this.startRoom.cords);
 		console.log(this.bossRoom.cords);
