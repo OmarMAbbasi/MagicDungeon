@@ -108,9 +108,32 @@ export default class Floor {
 
 		this.currentRoom = this.startRoom;
 		console.log(this.rooms);
+
 		for (let y = 0; y < this.rooms.length; y++) {
 			for (let x = 0; x < this.rooms.length; x++) {
 				let curr = this.rooms[y][x];
+				curr.setLayout();
+				debugger;
+				let north;
+				let south;
+				let east;
+				let west;
+				if (y - 1 > 0) {
+					north = this.rooms[y - 1][x];
+				}
+				if (y + 1 < this.rooms.length) {
+					south = this.rooms[y + 1][x];
+				}
+				if (x + 1 < this.rooms.length) {
+					east = this.rooms[y][x + 1];
+				}
+
+				if (x - 1 > 0) {
+					west = this.rooms[y][x - 1];
+				}
+				if (north && north.walls.south !== 'wall' && curr.walls.north === 'wall') {
+					debugger;
+				}
 				console.log(curr.type);
 			}
 		}

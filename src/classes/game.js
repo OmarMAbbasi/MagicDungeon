@@ -40,12 +40,13 @@ export default class Game {
 		this.grid[12][11].className = 'wiz';
 		this.grid[12][11].classList.add('idle-right');
 
-		this.throttledMove = _.throttle(this.move, 0);
-		// this.throttledMove = _.throttle(this.move, 751);
+		this.throttledMove = _.throttle(this.move, 375);
+		// this.throttledMove = _.throttle(this.move, 375);
 
-		this.bouncedIdle = _.debounce(this.idle, 0);
-		// this.bouncedIdle = _.debounce(this.idle, 751);
-
+		this.bouncedIdle = _.debounce(this.idle, 375);
+		// this.bouncedIdle = _.debounce(this.idle, 375);
+		// console.log(this.floor.bossRoom);
+		// console.log(this.floor.startRoom);
 		//!!Floor Management
 	}
 
@@ -54,7 +55,7 @@ export default class Game {
 	}
 
 	setCharPos(row, col) {
-		// this.charPos.square.classList.remove(...this.charPos.square.classList);
+		this.charPos.square.classList.remove(...this.charPos.square.classList);
 		this.charPos = {
 			square: this.grid[row][col],
 			row: row,
@@ -64,22 +65,24 @@ export default class Game {
 
 		this.grid[row][col].className = 'wiz';
 		this.grid[row][col].classList.add('idle-right');
-		this.changingRooms = false;
+		// this.changingRooms = false;
 	}
 
 	nextRoom(room, type) {
+		this.changingRooms = true;
 		let newRoom;
 		let out = TRANSITIONS_OUT[_.random(5)];
 		let back = TRANSITIONS_IN[_.random(5)];
-		// let oldRoom = this.grid[this.charPos.row][this.charPos.col];
-		// oldRoom.classList.remove(...oldRoom.classList);
+		let oldRoom = this.grid[this.charPos.row][this.charPos.col];
+		oldRoom.classList.remove(...oldRoom.classList);
 		// debugger;
-		// this.view.classList.add(out);
+		let view = this.view;
+		view.classList.add(out);
+
 		if (room.walls) {
 			switch (type) {
 				case 'north':
 					if (room.walls.north !== 'wall') {
-						debugger;
 						newRoom = room.walls.north;
 						this.setCharPos(22, 12);
 					}
@@ -107,30 +110,30 @@ export default class Game {
 					break;
 			}
 		}
-		if (!this.changingRooms) {
+		if (this.changingRooms) {
 			let view = this.view;
-			// setTimeout(() => {
-			// 	view.classList.remove(...view.classList);
-			// 	view.classList.add('room-holder');
-			// 	if (newRoom.type === 'boss' || newRoom.type === 'start') {
-			// 		view.classList.add(newRoom.type);
-			// 	} else {
-			// 		view.classList.add(newRoom.layout);
-			// 	}
-			// 	view.classList.add(back);
-			// }, 1200);
+			setTimeout(() => {
+				view.classList.remove(...view.classList);
+				view.classList.add('room-holder');
+				if (newRoom.type === 'boss' || newRoom.type === 'start') {
+					view.classList.add(newRoom.type);
+				} else {
+					debugger;
+					view.classList.add(newRoom.layout);
+				}
+				this.view.classList.add(back);
+				this.changingRooms = false;
+			}, 120);
 			this.floor.setCurrentRoom(newRoom);
 		}
-
-		this.changingRooms = false;
+		console.log(this.floor.currentRoom);
 	}
 
 	checkNorthDoor(row, col, shift) {
 		if (row > 1) {
 			shift--;
-		} else if (this.floor.currentRoom.north !== 'wall' && (col === 12 || col === 11)) {
+		} else if (this.floor.currentRoom.walls.north !== 'wall' && (col === 12 || col === 11)) {
 			if (row === 0) {
-				this.changingRooms = true;
 				console.log(this.changingRooms);
 				console.log('north!');
 
@@ -144,7 +147,7 @@ export default class Game {
 	checkSouthDoor(row, col, shift) {
 		if (row < 22) {
 			shift++;
-		} else if (this.floor.currentRoom.south !== 'wall' && (col === 12 || col === 11)) {
+		} else if (this.floor.currentRoom.walls.south !== 'wall' && (col === 12 || col === 11)) {
 			if (row === 23) {
 				this.nextRoom(this.floor.currentRoom, 'south');
 			} else {
@@ -156,7 +159,7 @@ export default class Game {
 	checkEastDoor(row, col, shift) {
 		if (col < 22) {
 			shift++;
-		} else if (this.floor.currentRoom.east !== 'wall' && (row === 12 || row === 11)) {
+		} else if (this.floor.currentRoom.walls.east !== 'wall' && (row === 12 || row === 11)) {
 			if (col === 23) {
 				this.nextRoom(this.floor.currentRoom, 'east');
 			} else {
@@ -169,7 +172,7 @@ export default class Game {
 	checkWestDoor(row, col, shift) {
 		if (col > 1) {
 			shift--;
-		} else if (this.floor.currentRoom.west !== 'wall' && (row === 12 || row === 11)) {
+		} else if (this.floor.currentRoom.walls.west !== 'wall' && (row === 12 || row === 11)) {
 			if (col === 0) {
 				this.nextRoom(this.floor.currentRoom, 'west');
 			} else {
@@ -209,21 +212,32 @@ export default class Game {
 		let { square } = this.charPos;
 		let next = this.grid[row][col];
 		let prev = this.charPos.square;
-		prev.classList.remove(...prev.classList);
-
-		if (row > pRow) {
+		if (this.changingRooms) {
+			prev.classList.remove(...prev.classList);
+			return null;
+			// debugger;
+		} else if (row > pRow) {
 			this.moveDown(next, prev);
+			prev.classList.remove(...prev.classList);
 		} else if (pRow > row) {
 			this.moveUp(next, prev);
+			prev.classList.remove(...prev.classList);
 		} else if (col > pCol) {
 			this.moveRight(next, prev);
+			prev.classList.remove(...prev.classList);
 		} else if (pCol > col) {
 			this.moveLeft(next, prev);
+			prev.classList.remove(...prev.classList);
 		} else {
 			prev.classList.remove(...prev.classList);
 			prev.classList.add('wiz');
 			prev.classList.add('idle-' + this.facing);
 		}
+
+		if (Math.abs(this.charPos.row - row) > 10 || Math.abs(this.charPos.col - col) > 10) {
+			return null;
+		}
+
 		Object.assign(this.charPos, { square: next, row: row, col: col });
 	}
 
@@ -289,6 +303,9 @@ export default class Game {
 	bindKeys() {
 		document.addEventListener('keydown', (e) => {
 			// console.log(e.keyCode);
+			if (this.changingRooms) {
+				return null;
+			}
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:

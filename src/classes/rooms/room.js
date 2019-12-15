@@ -20,5 +20,24 @@ export default class Room {
 		// debugger;
 	}
 
-	setLayout() {}
+	setLayout() {
+		if (this.type === 'start') {
+			this.type === 'start';
+		} else if (this.type === 'boss') {
+		} else if (this.type === 'normal') {
+			this.layout = '';
+			if (this.walls.north !== 'wall') {
+				this.layout += 'N';
+			}
+			if (this.walls.south !== 'wall') {
+				this.layout += 'S';
+			}
+			if (this.walls.east !== 'wall') {
+				this.layout += 'E';
+			}
+			if (this.walls.west !== 'wall') {
+				this.layout += 'W';
+			}
+		}
+	}
 }
