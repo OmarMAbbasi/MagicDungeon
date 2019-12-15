@@ -1,0 +1,48 @@
+.welcome-box {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 0px;
+	width: 0px;
+}
+
+.welcome-scroll {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-image: url('../assets/welcome-Scroll.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	position: relative;
+	height: 80vh;
+	width: 80vh;
+	z-index: 9;
+	top: -40vh;
+	left: -40vh;
+}
+
+.about-blurb {
+	padding: 5% 15%;
+	padding-bottom: 0%;
+}
+
+.wasd-prompt {
+	position: relative;
+	background-image: url('../assets/buttons/WASD_Prompt.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	height: 14%;
+	width: 21%;
+	/* margin-top: 50%;
+	margin-left: 50%;
+	top: -25%;
+	left: 50%; */
+}
+
+.start-button {
+	background-image: url('../assets/wood-background.png');
+	height: 5%;
+	width: 25%;
+	margin-top: 5%;
+	color: white;
+}

@@ -1,159 +1,275 @@
-import { throttle, debounce } from "lodash";
+import { throttle, debounce, random, delay } from "lodash";
 import Floor from "./floor";
+import Room from "./rooms/room";
+
+let TRANSITIONS_IN = [
+	"scale-in-top",
+	"rotate-in-center",
+	"roll-in-blurred-left",
+	"swirl-in-fwd",
+	"puff-in-center"
+];
+
+let TRANSITIONS_OUT = [
+	"scale-out-top",
+	"rotate-out-center",
+	"roll-out-blurred",
+	"swirl-out-fwd",
+	"puff-out-center"
+];
 
 export default class Game {
-	constructor(grid, floor) {
+	constructor({ grid, view }, floor) {
 		this.grid = grid;
 		this.floor = new Floor(6);
+
+		//!!Player Management
+		//TODO Move logic to player class after building spells
+		this.bindKeys = this.bindKeys.bind(this);
 		this.bindKeys();
-		this.charPos = {
-			square: this.grid[1][1],
-			row: 1,
-			col: 1
-		};
 		this.keys = {
 			up: false,
 			down: false,
 			right: false,
 			left: false
 		};
-		this.lastKey = "right";
-		this.grid[1][1].className = "wiz";
-		this.grid[1][1].classList.add("idle-right");
 
-		this.grid[10][10].classList.add("wiz");
-		this.grid[10][10].classList.add("down");
-		// this.grid[10][10].classList.add("idle-left");
+		// view = document.getElementsByClassName("room-holder");
 
-		// this.walkRight = this.walkRight.bind(this);
+		// this.view.className = "room-holder";
+		// this.view.classList.toggle("start-room");
+		this.view = view;
+		this.view.classList.add("start");
+		this.charPos = {
+			square: this.grid[12][11],
+			row: 12,
+			col: 11
+		};
+		this.facing = "right";
 
-		this.row = 0;
-		this.col = 0;
-		this.prev;
-		// this.throtRight = _.throttle(this.walkRight, 750);
-		this.resetHor = this.debHor.bind(this);
-		this.resetVert = this.debHor.bind(this);
+		this.grid[12][11].className = "wiz";
+		this.grid[12][11].classList.add("idle-right");
 
-		// this.resetHor = _.debounce(this.debHor, 750);
-		// this.resetVert = _.debounce(this.debHor, 750);
-		this.throttledMoveRight = _.throttle(this.throttledMoveRight, 750);
-		this.throttledMoveLeft = _.throttle(this.throttledMoveLeft, 750);
-		this.throttledMoveDown = _.throttle(this.throttledMoveDown, 750);
-		this.throttledMoveUp = _.throttle(this.throttledMoveUp, 750);
-		this.bounce = _.throttle(this.debtest, 750);
-		this.idle = _.debounce(this.resetAnimation, 750);
-		// this.throtRight = _.throttle(this.walkRight, 750);
+		this.throttledMove = _.throttle(this.move, 751);
+
+		this.bouncedIdle = _.debounce(this.idle, 751);
+
+		//!!Floor Management
 	}
 
-	throttledMoveRight() {
-		this.keys.right = true;
+	setCharPos(row, col) {
+		this.charPos.square.classList.remove(...this.charPos.square.classList);
+		this.charPos = {
+			square: this.grid[row][col],
+			row: row,
+			col: col
+		};
+		this.grid[row][col].className = "wiz";
+		this.grid[row][col].classList.add("idle-right");
+	}
 
-		if (this.col !== 1) {
-			this.col = 1;
+	nextRoom(room, type) {
+		let newRoom;
+
+		let out = TRANSITIONS_OUT[_.random(5)];
+		let back = TRANSITIONS_IN[_.random(5)];
+		this.view.classList.add(out);
+		switch (type) {
+			case "north":
+				newRoom = room.north;
+				this.setCharPos(12, 21);
+				break;
+			case "south":
+				newRoom = room.south;
+				this.setCharPos(12, 2);
+
+				break;
+			case "east":
+				newRoom = room.east;
+				this.setCharPos(12, 21);
+
+				break;
+			case "west":
+				newRoom = room.west;
+				this.setCharPos(12, 2);
+
+				break;
+			default:
+				break;
 		}
-		this.bounce();
+		let view = this.view;
+		setTimeout(() => {
+			view.classList.remove(...view.classList);
+			view.classList.add("room-holder");
+			if (newRoom.type === "boss" || newRoom.type === "start") {
+				view.classList.add(newRoom.type);
+			} else {
+				view.classList.add(newRoom.layout);
+			}
+			view.classList.add(back);
+		}, 1200);
+
+		this.floor.setCurrentRoom(newRoom);
 	}
 
-	throttledMoveLeft() {
-		this.keys.left = true;
-
-		if (this.col !== -1) {
-			this.col = -1;
+	checkNorthDoor(row, col, shift) {
+		if (row > 1) {
+			shift--;
+		} else if (
+			this.floor.currentRoom.north !== "wall" &&
+			(col === 12 || col === 11)
+		) {
+			if (row === 0) {
+				this.nextRoom(this.floor.currentRoom, "north");
+			} else {
+				shift--;
+			}
 		}
-		this.bounce();
+		return shift;
 	}
-
-	throttledMoveDown() {
-		this.keys.down = true;
-
-		if (this.row !== 1) {
-			this.row = 1;
+	checkSouthDoor(row, col, shift) {
+		if (row < 22) {
+			shift++;
+		} else if (
+			this.floor.currentRoom.south !== "wall" &&
+			(col === 12 || col === 11)
+		) {
+			if (row === 23) {
+				this.nextRoom(this.floor.currentRoom, "south");
+			} else {
+				shift++;
+			}
 		}
-		this.bounce();
+		return shift;
 	}
-
-	throttledMoveUp() {
-		this.keys.up = true;
-
-		if (this.row !== -1) {
-			this.row = -1;
+	checkEastDoor(row, col, shift) {
+		if (col < 22) {
+			shift++;
+		} else if (
+			this.floor.currentRoom.east !== "wall" &&
+			(row === 12 || row === 11)
+		) {
+			if (col === 23) {
+				this.nextRoom(this.floor.currentRoom, "east");
+			} else {
+				shift++;
+			}
 		}
-		this.bounce();
+		return shift;
 	}
 
-	resetAnimation() {
-		let [square, row, col] = Object.values(this.charPos);
-		if (this.lastKey === "left") {
-			square.classList.remove(...square.classList);
-			square.classList.add("wiz");
-			square.classList.add("idle-left");
-		} else if (this.lastKey === "right") {
-			square.classList.remove(...square.classList);
-			square.classList.add("wiz");
-			square.classList.add("idle-right");
+	checkWestDoor(row, col, shift) {
+		if (col > 1) {
+			shift--;
+		} else if (
+			this.floor.currentRoom.west !== "wall" &&
+			(row === 12 || row === 11)
+		) {
+			if (col === 0) {
+				this.nextRoom(this.floor.currentRoom, "west");
+			} else {
+				shift--;
+			}
 		}
+		return shift;
 	}
-	// debtest() {
-	// 	let [square, row, col] = Object.values(this.charPos);
-	// 	let pRow = row;
-	// 	let pCol = col;
-	// 	row += this.row;
-	// 	col += this.col;
-	// 	let next = this.grid[row][col];
-	// 	let prev = this.charPos.square;
-	// 	next.classList.add("wiz");
-	// 	if (pCol < col) {
-	// 		next.classList.add("right");
-	// 	} else if (pCol > col) {
-	// 		next.classList.add("left");
-	// 	}
-	// 	prev.className = "square";
-	// 	this.idle();
-	// 	Object.assign(this.charPos, { row: row, col: col, square: next });
-	// }
 
-	debHor(key) {
-		if (key === "left") {
-			this.lastKey = "left";
-			this.lastKey = "left";
+	shift(row, col) {
+		let hShift = 0;
+		let vShift = 0;
+		if (this.keys.up) {
+			vShift = this.checkNorthDoor(row, col, vShift);
 		}
-		if (key === "right") {
-			this.lastKey = "right";
+		if (this.keys.down) {
+			vShift = this.checkSouthDoor(row, col, vShift);
 		}
-		this.col = 0;
+		if (this.keys.left) {
+			hShift = this.checkWestDoor(row, col, hShift);
+		}
+		if (this.keys.right) {
+			hShift = this.checkEastDoor(row, col, hShift);
+		}
+		row += vShift;
+		col += hShift;
+		return [row, col];
 	}
 
-	debVert(key) {
-		this.row = 0;
-	}
-
-	debtest() {
-		debugger;
-		this.idle();
-		let [square, row, col] = Object.values(this.charPos);
-		let pRow = row;
-		let pCol = col;
-		row += this.row;
-		col += this.col;
+	step(row, pRow, col, pCol) {
+		let { square } = this.charPos;
 		let next = this.grid[row][col];
 		let prev = this.charPos.square;
 		prev.classList.remove(...prev.classList);
 
-		if (pCol < col) {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-			next.classList.add("right");
+		if (row > pRow) {
+			this.moveDown(next, prev);
+		} else if (pRow > row) {
+			this.moveUp(next, prev);
+		} else if (col > pCol) {
+			this.moveRight(next, prev);
 		} else if (pCol > col) {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-			next.classList.add("left");
+			this.moveLeft(next, prev);
 		} else {
-			next.classList.remove(...next.classList);
-			next.className = "wiz";
-
-			next.classList.add("right");
+			prev.classList.remove(...prev.classList);
+			prev.classList.add("wiz");
+			prev.classList.add("idle-" + this.facing);
 		}
-		Object.assign(this.charPos, { row: row, col: col, square: next });
+		Object.assign(this.charPos, { square: next, row: row, col: col });
+	}
+
+	move() {
+		this.bouncedIdle();
+		let { square, row, col } = this.charPos;
+		let prev = square;
+		let pRow = row;
+		let pCol = col;
+		[row, col] = this.shift(row, col);
+		// next.className = "wiz";
+		this.step(row, pRow, col, pCol);
+	}
+
+	idle() {
+		let { square, row, col } = this.charPos;
+		square.classList.remove(...square.classList);
+		square.classList.add("wiz");
+		square.classList.add("idle-" + this.facing);
+	}
+
+	moveUp(next, prev) {
+		let { square, row, col } = this.charPos;
+		let currClass = "up";
+		if (this.keys.right) {
+			currClass += "-right";
+		} else if (this.keys.left) {
+			currClass += "-left";
+		}
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add(currClass);
+	}
+	
+	moveDown(next, prev) {
+		let { square, row, col } = this.charPos;
+		let currClass = "down";
+		if (this.keys.right) {
+			currClass += "-right";
+		} else if (this.keys.left) {
+			currClass += "-left";
+		}
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add(currClass);
+	}
+	moveLeft(next, prev) {
+		let { square, row, col } = this.charPos;
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add("left");
+	}
+	moveRight(next, prev) {
+		let { square, row, col } = this.charPos;
+		next.classList.remove(...next.classList);
+		next.className = "wiz";
+		next.classList.add("right");
 	}
 
 	bindKeys() {
@@ -162,50 +278,60 @@ export default class Game {
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					this.throttledMoveUp();
+					this.keys.up = true;
+					this.throttledMove();
 					break;
 				case 83: // S
 				case 40:
-					this.throttledMoveDown();
+					this.keys.down = true;
+					this.throttledMove();
 					break;
 				case 65: // A
 				case 37:
-					this.throttledMoveLeft();
+					this.facing = "left";
+					this.keys.left = true;
+
+					this.throttledMove();
 					break;
 				case 68: // D
 				case 39:
-					this.throttledMoveRight();
+					this.facing = "right";
+
+					this.keys.right = true;
+
+					this.throttledMove();
 					break;
 				default:
 					break;
 			}
 		});
+
 		document.addEventListener("keyup", e => {
 			// console.log(e.keyCode);
 			switch (e.keyCode) {
 				case 87: // W
 				case 38:
-					this.bounce.cancel();
-					this.resetVert();
+					// this.bouncedIdle();
 
+					this.keys.up = false;
 					break;
 				case 83: // S
 				case 40:
-					this.bounce.cancel();
-					this.resetVert();
+					// this.bouncedIdle();
 
+					this.keys.down = false;
 					break;
 				case 65: // A
 				case 37:
-					this.bounce.cancel();
-					this.resetHor("left");
+					// this.bouncedIdle();
 
+					this.keys.left = false;
 					break;
 				case 68: // D
 				case 39:
-					this.bounce.cancel();
-					this.resetHor("right");
+					// this.bouncedIdle();
 
+					this.keys.right = false;
 					break;
 				default:
 					break;
