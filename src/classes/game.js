@@ -30,6 +30,7 @@ export default class Game {
 
 		this.view = view;
 		this.view.classList.add('start');
+		// this.view.classList.add(this.floor.bossRoom.type);
 		this.charPos = {
 			square: this.grid[12][11],
 			row: 12,
@@ -40,10 +41,10 @@ export default class Game {
 		this.grid[12][11].className = 'wiz';
 		this.grid[12][11].classList.add('idle-right');
 
-		this.throttledMove = _.throttle(this.move, 375);
+		this.throttledMove = _.throttle(this.move, 0);
 		// this.throttledMove = _.throttle(this.move, 375);
 
-		this.bouncedIdle = _.debounce(this.idle, 375);
+		this.bouncedIdle = _.debounce(this.idle, 0);
 		// this.bouncedIdle = _.debounce(this.idle, 375);
 		// console.log(this.floor.bossRoom);
 		// console.log(this.floor.startRoom);
@@ -115,13 +116,14 @@ export default class Game {
 			setTimeout(() => {
 				view.classList.remove(...view.classList);
 				view.classList.add('room-holder');
-				if (newRoom.type === 'boss' || newRoom.type === 'start') {
+				if (newRoom.type === 'start') {
 					view.classList.add(newRoom.type);
+				} else if (newRoom.type === 'boss') {
+					view.classList.add(this.floor.bossRoom.layout);
 				} else {
-					debugger;
 					view.classList.add(newRoom.layout);
 				}
-				this.view.classList.add(back);
+				view.classList.add(back);
 				this.changingRooms = false;
 			}, 120);
 			this.floor.setCurrentRoom(newRoom);

@@ -24,8 +24,20 @@
 .start {
 	background-image: url('../assets/rooms/special-rooms/start.png');
 }
-.boss {
-	background-image: url('../assets/rooms/special-rooms/boss.png');
+.bossN {
+	background-image: url('../assets/rooms/special-rooms/bossN.png');
+}
+
+.bossS {
+	background-image: url('../assets/rooms/special-rooms/bossS.png');
+}
+
+.bossE {
+	background-image: url('../assets/rooms/special-rooms/bossE.png');
+}
+
+.bossW {
+	background-image: url('../assets/rooms/special-rooms/bossW.png');
 }
 
 .NSEW {

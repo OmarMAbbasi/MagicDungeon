@@ -25,16 +25,16 @@ export default class Room {
 			this.type === 'start';
 		} else if (this.type === 'boss') {
 			if (this.walls.north !== 'wall') {
-				this.layout += 'N';
+				this.layout = 'bossN';
 			}
 			if (this.walls.south !== 'wall') {
-				this.layout += 'S';
+				this.layout = 'bossS';
 			}
 			if (this.walls.east !== 'wall') {
-				this.layout += 'E';
+				this.layout = 'bossE';
 			}
 			if (this.walls.west !== 'wall') {
-				this.layout += 'W';
+				this.layout = 'bossW';
 			}
 		} else if (this.type === 'normal') {
 			this.layout = '';

@@ -113,7 +113,6 @@ export default class Floor {
 			for (let x = 0; x < this.rooms.length; x++) {
 				let curr = this.rooms[y][x];
 				curr.setLayout();
-				debugger;
 				let north;
 				let south;
 				let east;
@@ -131,10 +130,6 @@ export default class Floor {
 				if (x - 1 > 0) {
 					west = this.rooms[y][x - 1];
 				}
-				if (north && north.walls.south !== 'wall' && curr.walls.north === 'wall') {
-					debugger;
-				}
-				console.log(curr.type);
 			}
 		}
 	}
