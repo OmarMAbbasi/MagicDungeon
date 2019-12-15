@@ -49,17 +49,16 @@ export default class Floor {
 			let east = null;
 			let west = null;
 			if (currY > 0) {
-				north = rooms[currX][currY - 1];
+				north = rooms[currY - 1][currX];
 			}
 			if (currY < rooms.length - 1) {
-				south = rooms[currX][currY + 1];
+				south = rooms[currY + 1][currX];
 			}
 			if (currX < rooms.length - 1) {
-				console.log(currX);
-				east = rooms[currX + 1][currY];
+				east = rooms[currY][currX + 1];
 			}
 			if (currX > 0) {
-				west = rooms[currX - 1][currY];
+				west = rooms[currY][currX - 1];
 			}
 
 			let validDirections = [];
@@ -75,30 +74,28 @@ export default class Floor {
 			if (west && !!!west.visited) {
 				validDirections.push('west');
 			}
-			if (!rooms) {
-				return null;
-			}
+
 			let nextDir = _.sample(validDirections);
 			switch (nextDir) {
 				case 'north':
 					buildStack.push(north);
-					north.walls.south = 'door';
-					curr.walls.north = 'door';
+					north.walls.south = curr;
+					curr.walls.north = north;
 					break;
 				case 'south':
 					buildStack.push(south);
-					south.walls.north = 'door';
-					curr.walls.south = 'door';
+					south.walls.north = curr;
+					curr.walls.south = south;
 					break;
 				case 'east':
 					buildStack.push(east);
-					east.walls.west = 'door';
-					curr.walls.east = 'door';
+					east.walls.west = curr;
+					curr.walls.east = east;
 					break;
 				case 'west':
 					buildStack.push(west);
-					west.walls.east = 'door';
-					curr.walls.west = 'door';
+					west.walls.east = curr;
+					curr.walls.west = west;
 					break;
 				default:
 					buildStack.pop();
@@ -115,6 +112,44 @@ export default class Floor {
 
 		this.currentRoom = this.startRoom;
 		console.log(this.rooms);
+		for (let y = 0; y < this.rooms.length; y++) {
+			for (let x = 0; x < this.rooms.length; x++) {
+				let curr = this.rooms[y][x];
+				let currX = curr.cords.x;
+				let currY = curr.cords.y;
+
+				let north = null;
+				let south = null;
+				let east = null;
+				let west = null;
+
+				if (currY > 0) {
+					north = this.rooms[currY - 1][currX];
+				}
+				if (currY < this.rooms.length - 1) {
+					south = this.rooms[currY + 1][currX];
+				}
+				if (currX < this.rooms.length - 1) {
+					east = this.rooms[currY][currX + 1];
+				}
+				if (currX > 0) {
+					west = this.rooms[currY][currX - 1];
+				}
+
+				if (north && curr.north !== north.south) {
+					console.log('bug!');
+				}
+				if (south && curr.south !== south.north) {
+					console.log('bug!');
+				}
+				if (east && curr.east !== east.west) {
+					console.log('bug!');
+				}
+				if (west && curr.west !== west.east) {
+					console.log('bug!');
+				}
+			}
+		}
 	}
 
 	//* Generates a start room and an end room in opposite quadrents
