@@ -1,92 +1,20 @@
-import { roomBuilder } from "./floorUtils";
-import { sample, method, some, pull } from "lodash";
+import { roomBuilder } from './floorUtils';
+import { sample, method, some, pull } from 'lodash';
 
 const rBuilder = roomBuilder;
 
-export const connectNodes = (rooms, curr, search) => {
+export const connectNodes = (rooms, curr, next) => {
 	//! first curr == boss
-	// let x = curr.cords.x;
-	// let y = curr.cords.y;
 	let buildQueue = [curr];
 	let visited = [];
-	// let found = false;
-	// let currRoom = rooms[x][y];
 	//TODO UPDATE BUILD POOLS
 
 	while (buildQueue.length > 0) {
 		let currRoom = buildQueue.shift();
 		visited.push(currRoom);
 		let nextRoom;
-		let rebuilt;
-		if (currRoom.north && currRoom.north !== "wall") {
-			nextRoom = currRoom.north;
 
-			if (
-				nextRoom.type === "unbuilt" &&
-				(nextRoom.type !== "start" || nextRoom.type !== "boss")
-			) {
-				// debugger;
-				rebuilt = buildNorth(nextRoom, currRoom);
-				nextRoom = _.merge(nextRoom, rebuilt);
-				buildQueue.unshift(nextRoom);
-				connectNodes(rooms, nextRoom, search);
-			}
-		}
-		if (currRoom.south && currRoom.south !== "wall") {
-			nextRoom = currRoom.south;
-			if (
-				nextRoom.type === "unbuilt" &&
-				(nextRoom.type !== "start" || nextRoom.type !== "boss")
-			) {
-				// debugger;
-				rebuilt = buildSouth(nextRoom, currRoom);
-				nextRoom = _.merge(nextRoom, rebuilt);
-				buildQueue.unshift(nextRoom);
-				connectNodes(rooms, nextRoom, search);
-			}
-		}
-		if (currRoom.east && currRoom.east !== "wall") {
-			nextRoom = currRoom.east;
-			if (
-				nextRoom.type === "unbuilt" &&
-				(nextRoom.type !== "start" || nextRoom.type !== "boss")
-			) {
-				// debugger;
-				rebuilt = buildEast(nextRoom, currRoom);
-				nextRoom = _.merge(nextRoom, rebuilt);
-				buildQueue.unshift(nextRoom);
-				connectNodes(rooms, nextRoom, search);
-			}
-		}
-		if (currRoom.west && currRoom.west !== "wall") {
-			nextRoom = currRoom.west;
-			if (
-				nextRoom.type === "unbuilt" &&
-				(nextRoom.type !== "start" || nextRoom.type !== "boss")
-			) {
-				// debugger;rooms
-				rebuilt = buildWest(nextRoom, currRoom);
-				nextRoom = _.merge(nextRoom, rebuilt);
-				buildQueue.unshift(nextRoom);
-				connectNodes(rooms, nextRoom, search);
-			}
-		}
-		if (
-			currRoom.north === "wall" &&
-			currRoom.south === "wall" &&
-			currRoom.east === "wall" &&
-			currRoom.west === "wall"
-		) {
-			return "blocked";
-		}
-		if (currRoom.type === search.type) {
-			return true;
-		} else if (!nextRoom) {
-			connectNodes(rooms, currRoom, search);
-		} else if (nextRoom.type === search.type) {
-			return true;
-		}
-		return false;
+		// debugger;
 
 		// debugger;
 	}
@@ -99,16 +27,16 @@ const sampleSet = (set, prev) => {
 	let safe = set;
 	if (prev.layout.match(regex)) {
 		safe = set
-			.map(pool => {
+			.map((pool) => {
 				if (!pool.match(regex)) {
 					return pool;
 				}
 			})
-			.filter(ele => ele);
+			.filter((ele) => ele);
 	}
 
 	let layout = _.sample(safe);
-	return rBuilder(layout, "built");
+	return rBuilder(layout, 'built');
 };
 
 export const buildNorth = (room, prev) => {
@@ -279,99 +207,43 @@ export const buildEast = (room, prev) => {
 
 //!!BUILD SOUTH>NORTH
 export const NORTH = {
-	NORTH_TO_NW: ["northDeadend", "cornerNW"],
-	NORTH_TO_NE: ["northDeadend", "cornerNE"],
-	NORTH_WALL: ["northDeadend", "cornerNE", "cornerNW", "northWall"],
-	NORTH_ALONG_WEST: ["northDeadend", "cornerNW", "westWall", "verticalHallway"],
-	NORTH_ALONG_EAST: ["northDeadend", "cornerNE", "eastWall", "verticalHallway"],
-	PURE_NORTH: [
-		"northDeadend",
-		"cornerNE",
-		"cornerNW",
-		"verticalHallway",
-		"northWall",
-		"eastWall",
-		"westWall",
-		"open"
-	]
+	NORTH_TO_NW: ['northDeadend', 'cornerNW'],
+	NORTH_TO_NE: ['northDeadend', 'cornerNE'],
+	NORTH_WALL: ['northDeadend', 'cornerNE', 'cornerNW', 'northWall'],
+	NORTH_ALONG_WEST: ['northDeadend', 'cornerNW', 'westWall', 'verticalHallway'],
+	NORTH_ALONG_EAST: ['northDeadend', 'cornerNE', 'eastWall', 'verticalHallway'],
+	PURE_NORTH: ['northDeadend', 'cornerNE', 'cornerNW', 'verticalHallway', 'northWall', 'eastWall', 'westWall', 'open']
 };
 
 //!!BUILD NORTH>SOUTH
 export const SOUTH = {
-	SOUTH_TO_SW: ["southDeadend", "cornerSW"],
-	SOUTH_TO_SE: ["southDeadend", "cornerSE"],
-	SOUTH_WALL: ["southDeadend", "cornerSE", "cornerSW", "southWall"],
-	SOUTH_ALONG_WEST: ["southDeadend", "cornerSW", "westWall", "verticalHallway"],
-	SOUTH_ALONG_EAST: ["southDeadend", "cornerSE", "eastWall", "verticalHallway"],
-	PURE_SOUTH: [
-		"southDeadend",
-		"cornerSW",
-		"cornerSE",
-		"verticalHallway",
-		"southWall",
-		"eastWall",
-		"westWall",
-		"open"
-	]
+	SOUTH_TO_SW: ['southDeadend', 'cornerSW'],
+	SOUTH_TO_SE: ['southDeadend', 'cornerSE'],
+	SOUTH_WALL: ['southDeadend', 'cornerSE', 'cornerSW', 'southWall'],
+	SOUTH_ALONG_WEST: ['southDeadend', 'cornerSW', 'westWall', 'verticalHallway'],
+	SOUTH_ALONG_EAST: ['southDeadend', 'cornerSE', 'eastWall', 'verticalHallway'],
+	PURE_SOUTH: ['southDeadend', 'cornerSW', 'cornerSE', 'verticalHallway', 'southWall', 'eastWall', 'westWall', 'open']
 };
 //!Build WEST > EAST
 export const EAST = {
-	EAST_TO_SE: ["eastDeadend", "cornerSE"],
-	EAST_TO_SW: ["eastDeadend", "cornerSW"],
-	EAST_WALL: ["eastDeadend", "cornerSE", "cornerSW", " eastWall "],
-	EAST_ALONG_NORTH: [
-		"eastDeadend",
-		"cornerNE",
-		"northWall",
-		"horizontalHallway"
-	],
-	EAST_ALONG_SOUTH: [
-		"eastDeadend",
-		"cornerSE",
-		"southWall",
-		"horizontalHallway"
-	],
-	PURE_EAST: [
-		"eastDeadend",
-		"cornerSW",
-		"cornerNW",
-		"horizontalHallway",
-		"southWall",
-		"northWall",
-		"eastWall",
-		"open"
-	]
+	EAST_TO_SE: ['eastDeadend', 'cornerSE'],
+	EAST_TO_SW: ['eastDeadend', 'cornerSW'],
+	EAST_WALL: ['eastDeadend', 'cornerSE', 'cornerSW', ' eastWall '],
+	EAST_ALONG_NORTH: ['eastDeadend', 'cornerNE', 'northWall', 'horizontalHallway'],
+	EAST_ALONG_SOUTH: ['eastDeadend', 'cornerSE', 'southWall', 'horizontalHallway'],
+	PURE_EAST: ['eastDeadend', 'cornerSW', 'cornerNW', 'horizontalHallway', 'southWall', 'northWall', 'eastWall', 'open']
 };
 //! Build EAST>WEST
 export const WEST = {
-	WEST_TO_NW: ["westDeadend", "cornerNW"],
-	WEST_TO_SW: ["westDeadend", "cornerSW"],
-	WEST_WALL: ["westDeadend", "cornerNW", "cornerSW", "westWall"],
-	WEST_ALONG_NORTH: [
-		"westDeadend",
-		"cornerNW",
-		"horizontalHallway",
-		"northWall"
-	],
-	WEST_ALONG_SOUTH: [
-		"westDeadend",
-		"cornerSW",
-		"horizontalHallway",
-		"southWall"
-	],
-	PURE_WEST: [
-		"westDeadend",
-		"cornerSW",
-		"cornerNW",
-		"horizontalHallway",
-		"southWall",
-		"northWall",
-		"westWall",
-		"open"
-	]
+	WEST_TO_NW: ['westDeadend', 'cornerNW'],
+	WEST_TO_SW: ['westDeadend', 'cornerSW'],
+	WEST_WALL: ['westDeadend', 'cornerNW', 'cornerSW', 'westWall'],
+	WEST_ALONG_NORTH: ['westDeadend', 'cornerNW', 'horizontalHallway', 'northWall'],
+	WEST_ALONG_SOUTH: ['westDeadend', 'cornerSW', 'horizontalHallway', 'southWall'],
+	PURE_WEST: ['westDeadend', 'cornerSW', 'cornerNW', 'horizontalHallway', 'southWall', 'northWall', 'westWall', 'open']
 };
 
 export const SCALE = {
-	MIN_WALLS: ["northWall", "eastWall", "southWall", "westWall", "open"],
-	CLOSE_GAPS: ["northDeadend", "southDeadend", "eastDeadend", "westDeadend"]
+	MIN_WALLS: ['northWall', 'eastWall', 'southWall', 'westWall', 'open'],
+	CLOSE_GAPS: ['northDeadend', 'southDeadend', 'eastDeadend', 'westDeadend']
 };
