@@ -99,7 +99,7 @@ export default class Floor {
 					break;
 				default:
 					buildStack.pop();
-					break;
+					return null;
 			}
 		}
 
@@ -159,11 +159,31 @@ export default class Floor {
 		quad = this.bossRoom.quad;
 		this.bossRoom = Object.assign(this.bossRoom, this.pickCord(quad));
 		this.setBossExit();
+
+		let sY = this.startRoom.cords.y;
+		let sX = this.startRoom.cords.x;
+
+		let north = this.rooms[sY - 1][sX];
+		// this.startRoom.walls.north = north;
+		north.walls.south = this.startRoom;
+
+		let south = this.rooms[sY + 1][sX];
+		// this.startRoom.walls.south = south;
+		south.walls.north = this.startRoom;
+
+		let east = this.rooms[sY][sX + 1];
+		// this.startRoom.walls.east = east;
+		east.walls.west = this.startRoom;
+
+		let west = this.rooms[sY][sX - 1];
+		// this.startRoom.walls.west = west;
+		west.walls.east = this.startRoom;
+
 		this.startRoom.walls = {
-			north: 'door',
-			south: 'door',
-			east: 'door',
-			west: 'door'
+			north: north,
+			south: south,
+			east: east,
+			west: west
 		};
 	}
 
@@ -209,18 +229,29 @@ export default class Floor {
 			west: 'wall'
 		};
 
+		let bX = this.bossRoom.cords.x;
+		let bY = this.bossRoom.cords.y;
+
 		switch (layouts) {
 			case 'north':
-				this.bossRoom.walls.north = 'door';
+				let north = this.rooms[bY - 1][bX];
+				this.bossRoom.walls.north = north;
+				north.walls.south = this.bossRoom;
 				break;
 			case 'south':
-				this.bossRoom.walls.south = 'door';
+				let south = this.rooms[bY + 1][bX];
+				this.bossRoom.walls.south = south;
+				south.walls.north = this.bossRoom;
 				break;
 			case 'east':
-				this.bossRoom.walls.east = 'door';
+				let east = this.rooms[bY][bX + 1];
+				this.bossRoom.walls.east = east;
+				east.walls.west = this.bossRoom;
 				break;
 			case 'west':
-				this.bossRoom.walls.west = 'door';
+				let west = this.rooms[bY][bX - 1];
+				this.bossRoom.walls.west = west;
+				west.walls.east = this.bossRoom;
 				break;
 			default:
 				break;
@@ -268,16 +299,16 @@ export default class Floor {
 		let x = this.startRoom.cords.x;
 		let y = this.startRoom.cords.y;
 
-		let start = this.rooms[x][y];
+		let start = this.rooms[y][x];
 		this.startRoom = _.merge(start, this.startRoom);
-		this.rooms[x][y] = this.startRoom;
+		this.rooms[y][x] = this.startRoom;
 		// Object.assign(roomBuilder("open", "start"));
 
 		x = this.bossRoom.cords.x;
 		y = this.bossRoom.cords.y;
 
-		let boss = this.rooms[x][y];
+		let boss = this.rooms[y][x];
 		this.bossRoom = _.merge(boss, this.bossRoom);
-		this.rooms[x][y] = this.bossRoom;
+		this.rooms[y][x] = this.bossRoom;
 	}
 }
