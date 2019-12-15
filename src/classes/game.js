@@ -246,6 +246,7 @@ export default class Game {
 		next.className = "wiz";
 		next.classList.add(currClass);
 	}
+	
 	moveDown(next, prev) {
 		let { square, row, col } = this.charPos;
 		let currClass = "down";
