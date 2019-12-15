@@ -6,14 +6,19 @@ export default class Room {
 			east: 'wall',
 			west: 'wall'
 		};
+
 		this.cords = {
 			x: x,
 			y: y
 		};
+
+		this.type = 'normal';
 
 		this.visited = false;
 		this.layout = null;
 		// this.visited = false;
 		// debugger;
 	}
+
+	setLayout() {}
 }

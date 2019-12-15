@@ -1,14 +1,11 @@
-import { roomBuilder, floorBuilder } from './util/floorUtils';
+import { floorBuilder } from './util/floorUtils';
 import { random, sample, merge } from 'lodash';
-import { connectNodes } from './util/nodeUtils';
 
 export default class Floor {
 	constructor(size) {
 		//*Default = 6 x 6
 		//!rooms=[x,y]
-		this.rBuilder = roomBuilder;
 		const fBuilder = floorBuilder;
-		const nodes = connectNodes;
 
 		this.rooms = fBuilder(size);
 
@@ -36,7 +33,6 @@ export default class Floor {
 		this.genEndpoints();
 		this.setEndpoints();
 
-		let curr;
 		let buildStack = [this.startRoom];
 
 		function step(curr, rooms) {
@@ -115,39 +111,7 @@ export default class Floor {
 		for (let y = 0; y < this.rooms.length; y++) {
 			for (let x = 0; x < this.rooms.length; x++) {
 				let curr = this.rooms[y][x];
-				let currX = curr.cords.x;
-				let currY = curr.cords.y;
-
-				let north = null;
-				let south = null;
-				let east = null;
-				let west = null;
-
-				if (currY > 0) {
-					north = this.rooms[currY - 1][currX];
-				}
-				if (currY < this.rooms.length - 1) {
-					south = this.rooms[currY + 1][currX];
-				}
-				if (currX < this.rooms.length - 1) {
-					east = this.rooms[currY][currX + 1];
-				}
-				if (currX > 0) {
-					west = this.rooms[currY][currX - 1];
-				}
-
-				if (north && curr.north !== north.south) {
-					console.log('bug!');
-				}
-				if (south && curr.south !== south.north) {
-					console.log('bug!');
-				}
-				if (east && curr.east !== east.west) {
-					console.log('bug!');
-				}
-				if (west && curr.west !== west.east) {
-					console.log('bug!');
-				}
+				console.log(curr.type);
 			}
 		}
 	}
